@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".HomeFragment">
+
+    <LinearLayout
+        android:id="@+id/layoutOne"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:padding="15dp"
+        android:background="@drawable/layout_bg"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/usernameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/nunitomedium"
+                android:text="Hi, Khonsa"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/usernameTv"
+                android:text="Kemana kamu akan pergi?"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:fontFamily="@font/nunitoreguler"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="1dp"
+                android:background="@color/white"
+                app:shapeAppearanceOverlay="@style/circle" />
+        </RelativeLayout>
+
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/search_custom"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/kategoriTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="25dp"
+        android:text="@string/kategori_wisata"
+        android:textColor="@color/PrimaryDark"
+        android:textSize="18sp"
+        android:fontFamily="@font/nunitobold"
+        app:layout_constraintTop_toBottomOf="@id/layoutOne"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/scroll_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/kategoriTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/categoryAlam"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_alam"
+                    android:background="@drawable/custom_card"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alam"
+                    android:textAlignment="center"
+                    android:textColor="@color/Primary"
+                    android:fontFamily="@font/nunitoreguler"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/categoryPantai"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_pantai"
+                    android:background="@drawable/custom_card"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pantai"
+                    android:textAlignment="center"
+                    android:textColor="@color/Primary"
+                    android:fontFamily="@font/nunitoreguler"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/categorySejarah"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_sejarah"
+                    android:background="@drawable/custom_card"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sejarah"
+                    android:textAlignment="center"
+                    android:textColor="@color/Primary"
+                    android:fontFamily="@font/nunitoreguler"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/categoryKuliner"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_food"
+                    android:background="@drawable/custom_card"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/kuliner"
+                    android:textAlignment="center"
+                    android:textColor="@color/Primary"
+                    android:fontFamily="@font/nunitoreguler"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/categoryOlehOleh"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_market"
+                    android:background="@drawable/custom_card"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/oleh_oleh"
+                    android:textAlignment="center"
+                    android:textColor="@color/Primary"
+                    android:fontFamily="@font/nunitoreguler"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/semuaWisataTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="25dp"
+        android:text="Semua Wisata"
+        android:textColor="@color/PrimaryDark"
+        android:textSize="18sp"
+        android:fontFamily="@font/nunitobold"
+        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
