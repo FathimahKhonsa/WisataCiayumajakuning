@@ -62,16 +62,16 @@ public class RegisterUserActivity extends AppCompatActivity {
             Toast.makeText(this, "Anda belum mengisi data Anda", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!isValidEmail(email)) {
-            binding.inputEmail.setError("Periksa kembali alamat email Anda");
-            binding.inputEmail.requestFocus();
+            binding.emailLayout.setError("Periksa kembali alamat email Anda");
+            binding.emailLayout.requestFocus();
             return false;
         } else if (!confirmationPass.equals(password)) {
-            binding.konfirmasiPassword.setError("Password Anda tidak sama");
-            binding.konfirmasiPassword.requestFocus();
+            binding.konfirmasiLayout.setError("Password Anda tidak sama");
+            binding.konfirmasiLayout.requestFocus();
             return false;
         } else if (password.length() < 6) {
-            binding.inputPassword.setError("Password Anda harus lebih dari 6 karakter");
-            binding.inputPassword.requestFocus();
+            binding.passwordLayout.setError("Password Anda harus lebih dari 6 karakter");
+            binding.passwordLayout.requestFocus();
             return false;
         } else {
             return true;
@@ -114,14 +114,14 @@ public class RegisterUserActivity extends AppCompatActivity {
                         try {
                             throw task.getException();
                         } catch (FirebaseAuthWeakPasswordException e){
-                            binding.inputPassword.setError("Password Anda terlalu lemah. Gunakan campuran alfabet, angka, dan simbol");
-                            binding.inputPassword.requestFocus();
+                            binding.passwordLayout.setError("Password Anda terlalu lemah. Gunakan campuran alfabet, angka, dan simbol");
+                            binding.passwordLayout.requestFocus();
                         } catch (FirebaseAuthInvalidCredentialsException e){
-                            binding.inputPassword.setError("Email Anda invalid atau sudah digunakan untuk registrasi");
-                            binding.inputPassword.requestFocus();
+                            binding.passwordLayout.setError("Email Anda invalid atau sudah digunakan untuk registrasi");
+                            binding.passwordLayout.requestFocus();
                         } catch (FirebaseAuthUserCollisionException e){
-                            binding.inputPassword.setError("Anda sudah registrasi dengan email ini. Gunakan email yang lain");
-                            binding.inputPassword.requestFocus();
+                            binding.passwordLayout.setError("Anda sudah registrasi dengan email ini. Gunakan email yang lain");
+                            binding.passwordLayout.requestFocus();
                         } catch (Exception e){
                             Log.e(TAG, e.getMessage());
                             Toast.makeText(RegisterUserActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();

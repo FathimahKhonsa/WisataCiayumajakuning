@@ -31,15 +31,15 @@
                 android:fontFamily="@font/nunitomedium"
                 android:text="Hi, Khonsa"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/usernameTv"
-                android:text="Kemana kamu akan pergi?"
+                android:text="Mau kemana hari ini ?"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:fontFamily="@font/nunitoreguler"/>
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -67,7 +67,7 @@
         android:layout_marginStart="25dp"
         android:text="@string/kategori_wisata"
         android:textColor="@color/PrimaryDark"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:fontFamily="@font/nunitobold"
         app:layout_constraintTop_toBottomOf="@id/layoutOne"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -106,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/alam"
                     android:textAlignment="center"
+                    android:textSize="12sp"
                     android:textColor="@color/Primary"
                     android:fontFamily="@font/nunitoreguler"/>
             </LinearLayout>
@@ -130,6 +131,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pantai"
                     android:textAlignment="center"
+                    android:textSize="12sp"
                     android:textColor="@color/Primary"
                     android:fontFamily="@font/nunitoreguler"/>
             </LinearLayout>
@@ -154,6 +156,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/sejarah"
                     android:textAlignment="center"
+                    android:textSize="12sp"
                     android:textColor="@color/Primary"
                     android:fontFamily="@font/nunitoreguler"/>
             </LinearLayout>
@@ -178,6 +181,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/kuliner"
                     android:textAlignment="center"
+                    android:textSize="12sp"
                     android:textColor="@color/Primary"
                     android:fontFamily="@font/nunitoreguler"/>
             </LinearLayout>
@@ -202,6 +206,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/oleh_oleh"
                     android:textAlignment="center"
+                    android:textSize="12sp"
                     android:textColor="@color/Primary"
                     android:fontFamily="@font/nunitoreguler"/>
             </LinearLayout>
@@ -217,10 +222,23 @@
         android:layout_marginStart="25dp"
         android:text="Semua Wisata"
         android:textColor="@color/PrimaryDark"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:fontFamily="@font/nunitobold"
         app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvWisata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        tools:listitem="@layout/item_wisata"
+        tools:itemCount="10"
+        tools:orientation="vertical"
+        tools:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/semuaWisataTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

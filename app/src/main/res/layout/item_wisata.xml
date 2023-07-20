@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="165dp"
+    android:layout_height="165dp"
+    android:layout_margin="15dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/wisataImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Image Wisata"
+            android:scaleType="fitXY"
+            android:src="@drawable/sample_wisata" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:background="@drawable/layout_itembg"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/namaWisata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nama_wisata"
+                android:textSize="13sp"
+                android:textColor="@color/PrimaryDark"
+                android:fontFamily="@font/nunitobold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/temapat_wisata"
+                android:textSize="10sp"
+                android:textColor="@color/Primary"
+                tools:ignore="SmallSp"
+                android:fontFamily="@font/nunitoreguler"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
