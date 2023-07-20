@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginUserActivity extends AppCompatActivity {
     private ActivityLoginUserBinding binding;
@@ -75,10 +76,7 @@ public class LoginUserActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         Toast.makeText(LoginUserActivity.this, "Anda berhasil login", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(LoginUserActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        reload();
                     } else {
                        try {
                            throw task.getException();
@@ -97,5 +95,24 @@ public class LoginUserActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null){
+            reload();
+        } else {
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(this, "Sesi Anda telah habis", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void reload(){
+        Intent intent = new Intent(LoginUserActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/layoutOne"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="185dp"
         android:padding="15dp"
         android:background="@drawable/layout_bg"
         android:orientation="vertical"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="0dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:fontFamily="@font/nunitomedium"
                 android:text="Hi, Khonsa"
                 android:textColor="@color/white"
@@ -45,7 +45,6 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:layout_marginTop="10dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="1dp"
                 android:background="@color/white"
@@ -55,7 +54,7 @@
         <SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="25dp"
             android:background="@drawable/search_custom"/>
     </LinearLayout>
 
@@ -218,7 +217,7 @@
         android:id="@+id/semuaWisataTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3dp"
         android:layout_marginStart="25dp"
         android:text="Semua Wisata"
         android:textColor="@color/PrimaryDark"
