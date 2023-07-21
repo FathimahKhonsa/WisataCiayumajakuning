@@ -23,4 +23,9 @@
     <string name="button_image">button image</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="settings">SETTINGS</string>
+    <string name="ubah_kata_sandi">Ubah Kata Sandi</string>
+    <string name="ubah_email">Ubah Email</string>
+    <string name="lainnya">LAINNYA</string>
+    <string name="log_out">Log Out</string>
+    <string name="hapus_akun">Hapus Akun</string>
 </resources>
