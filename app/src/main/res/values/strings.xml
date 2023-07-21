@@ -20,4 +20,7 @@
     <string name="oleh_oleh">Oleh-Oleh</string>
     <string name="nama_wisata">Nama Wisata</string>
     <string name="temapat_wisata">Tempat Wisata</string>
+    <string name="button_image">button image</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="settings">SETTINGS</string>
 </resources>
