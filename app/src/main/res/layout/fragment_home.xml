@@ -43,12 +43,16 @@
                 android:fontFamily="@font/nunitoreguler"/>
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileImg"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="1dp"
                 android:background="@color/white"
-                app:shapeAppearanceOverlay="@style/circle" />
+                android:padding="4dp"
+                app:shapeAppearanceOverlay="@style/circle"
+                app:strokeColor="@color/white"
+                app:strokeWidth="4dp"/>
         </RelativeLayout>
 
         <SearchView

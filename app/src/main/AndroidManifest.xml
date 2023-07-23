@@ -15,6 +15,9 @@
         android:theme="@style/Theme.WisataCiayumajakuning"
         tools:targetApi="31">
         <activity
+            android:name=".wisata.CategoryWisataActivity"
+            android:exported="false" />
+        <activity
             android:name=".wisata.DetailWisataActivity"
             android:exported="false" />
         <activity
