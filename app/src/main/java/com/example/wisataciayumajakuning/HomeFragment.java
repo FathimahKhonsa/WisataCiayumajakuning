@@ -1,6 +1,7 @@
 package com.example.wisataciayumajakuning;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ import com.example.wisataciayumajakuning.adapter.WisataAdapter;
 import com.example.wisataciayumajakuning.databinding.FragmentHomeBinding;
 import com.example.wisataciayumajakuning.model.User;
 import com.example.wisataciayumajakuning.model.Wisata;
+import com.example.wisataciayumajakuning.wisata.CategoryWisataActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,11 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
     private FragmentHomeBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
+    private FirebaseUser currentUser;
     private RecyclerView rvWisata;
     private ImageView alam, pantai, sejarah, kuliner, market;
     private List<Wisata> wisataList = new ArrayList<>();
@@ -68,6 +70,12 @@ public class HomeFragment extends Fragment {
         }
 
         db = FirebaseFirestore.getInstance();
+
+        binding.categoryAlam.setOnClickListener(this);
+        binding.categoryPantai.setOnClickListener(this);
+        binding.categoryKuliner.setOnClickListener(this);
+        binding.categoryOlehOleh.setOnClickListener(this);
+        binding.categorySejarah.setOnClickListener(this);
 
         rvWisata = binding.rvWisata;
         getDataWisata();
@@ -120,5 +128,32 @@ public class HomeFragment extends Fragment {
                 binding.progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.categoryAlam){
+            Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "alam");
+            startActivity(intent);
+        } else if (id == R.id.categoryKuliner) {
+            Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "kuliner");
+            startActivity(intent);
+        } else if (id == R.id.categoryPantai) {
+            Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "pantai");
+            startActivity(intent);
+        } else if (id == R.id.categorySejarah) {
+            Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "sejarah");
+            startActivity(intent);
+        } else if (id == R.id.categoryOlehOleh) {
+            Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "oleh-oleh");
+            startActivity(intent);
+        }
     }
 }

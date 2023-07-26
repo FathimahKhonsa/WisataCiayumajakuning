@@ -9,31 +9,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.wisataciayumajakuning.databinding.ItemWisataBinding;
+import com.example.wisataciayumajakuning.databinding.ItemCategoryBinding;
 import com.example.wisataciayumajakuning.model.Wisata;
 import com.example.wisataciayumajakuning.wisata.DetailWisataActivity;
 
 import java.util.List;
 
-public class WisataAdapter extends RecyclerView.Adapter<WisataAdapter.MyViewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
     private Context context;
-    private List<Wisata> wisataList;
+    private List<Wisata> list;
 
-    public WisataAdapter(Context context, List<Wisata> wisataList) {
+    public CategoryAdapter(Context context, List<Wisata> list) {
         this.context = context;
-        this.wisataList = wisataList;
+        this.list = list;
     }
 
     @NonNull
     @Override
-    public WisataAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemWisataBinding binding = ItemWisataBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+    public CategoryAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemCategoryBinding binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MyViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WisataAdapter.MyViewHolder holder, int position) {
-        Wisata wisata = wisataList.get(position);
+    public void onBindViewHolder(@NonNull CategoryAdapter.MyViewHolder holder, int position) {
+        Wisata wisata = list.get(position);
         if (wisata != null){
             holder.bind(wisata);
         }
@@ -41,30 +41,30 @@ public class WisataAdapter extends RecyclerView.Adapter<WisataAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return wisataList.size();
+        return list.size();
     }
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private final ItemWisataBinding binding;
-        public MyViewHolder(ItemWisataBinding binding) {
+       private final ItemCategoryBinding binding;
+        public MyViewHolder(ItemCategoryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
         public void bind(Wisata wisata){
             binding.namaWisata.setText(wisata.getName());
-            binding.cityWisata.setText(wisata.getCity());
+            binding.kotaWisata.setText(wisata.getCity());
+            binding.alamatWisata.setText(wisata.getAddress());
 
             Glide.with(this.itemView).load(wisata.getImage()).centerCrop().into(binding.wisataImg);
 
             int position = getAdapterPosition();
             itemView.setOnClickListener(view -> {
                 Intent intent = new Intent(context, DetailWisataActivity.class);
-                intent.putExtra("img", wisataList.get(position).getImage());
-                intent.putExtra("name", wisataList.get(position).getName());
-                intent.putExtra("city", wisataList.get(position).getCity());
-                intent.putExtra("description", wisataList.get(position).getDescription());
-                intent.putExtra("address", wisataList.get(position).getAddress());
+                intent.putExtra("img", list.get(position).getImage());
+                intent.putExtra("name", list.get(position).getName());
+                intent.putExtra("city", list.get(position).getCity());
+                intent.putExtra("description", list.get(position).getDescription());
+                intent.putExtra("address", list.get(position).getAddress());
                 itemView.getContext().startActivity(intent);
             });
         }

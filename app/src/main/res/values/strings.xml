@@ -28,4 +28,9 @@
     <string name="lainnya">LAINNYA</string>
     <string name="log_out">Log Out</string>
     <string name="hapus_akun">Hapus Akun</string>
+    <string name="kota_wisata">Kota Wisata</string>
+    <string name="rute_wisata">Rute Wisata</string>
+    <string name="find_route">Find Route</string>
+    <string name="deskripsi_wisata">Deskripsi Wisata</string>
+    <string name="alamat_wisata">Alamat Wisata :</string>
 </resources>

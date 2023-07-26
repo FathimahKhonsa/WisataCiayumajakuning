@@ -13,5 +13,6 @@
     <color name="SecondaryLight">#DDE6ED</color>
 
     <color name="Navy">#002B5B</color>
+    <color name="background">#F6F4EB</color>
 
 </resources>

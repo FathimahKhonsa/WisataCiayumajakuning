@@ -11,15 +11,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="15dp">
+        android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imgCard"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             app:cardElevation="5dp"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="15dp">
 
             <ImageView
                 android:id="@+id/wisataImg"
@@ -32,25 +31,27 @@
             android:id="@+id/namaWisata"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_toEndOf="@id/imgCard"
             android:fontFamily="@font/nunitobold"
             android:text="@string/nama_wisata"
             android:textColor="@color/PrimaryDark"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/kotaWisata"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_below="@id/namaWisata"
             android:layout_toEndOf="@id/imgCard"
             android:fontFamily="@font/nunitosemibold"
-            android:text="@string/temapat_wisata"
+            android:text="@string/kota_wisata"
             android:textColor="@color/Primary"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:drawablePadding="5dp"
             app:drawableStartCompat="@drawable/ic_location" />
 
@@ -58,12 +59,13 @@
             android:id="@+id/alamatWisata"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_below="@id/kotaWisata"
             android:layout_toEndOf="@id/imgCard"
             android:fontFamily="@font/nunitomedium"
             android:text="@string/temapat_wisata"
             android:textColor="@color/Primary"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
