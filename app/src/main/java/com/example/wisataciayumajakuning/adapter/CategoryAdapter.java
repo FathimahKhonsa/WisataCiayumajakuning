@@ -65,6 +65,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
                 intent.putExtra("city", list.get(position).getCity());
                 intent.putExtra("description", list.get(position).getDescription());
                 intent.putExtra("address", list.get(position).getAddress());
+                intent.putExtra("lat", list.get(position).getLat());
+                intent.putExtra("lng", list.get(position).getLng());
                 itemView.getContext().startActivity(intent);
             });
         }

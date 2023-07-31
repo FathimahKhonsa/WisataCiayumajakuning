@@ -33,4 +33,11 @@
     <string name="find_route">Find Route</string>
     <string name="deskripsi_wisata">Deskripsi Wisata</string>
     <string name="alamat_wisata">Alamat Wisata :</string>
+    <string name="API_KEY">AIzaSyDSBK_d-5-06ZoK4StyqLKXJrnbPbZA2ww</string>
+    <string name="lokasi_anda">Lokasi Anda:</string>
+    <string name="current_location">current location</string>
+    <string name="lokasi_tujuan">Lokasi Tujuan:</string>
+    <string name="end_location">End Location</string>
+    <string name="jarak_tempuh">Jarak Tempuh</string>
+    <string name="waktu_tempuh">Waktu tempuh</string>
 </resources>

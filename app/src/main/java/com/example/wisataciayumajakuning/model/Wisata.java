@@ -1,13 +1,13 @@
 package com.example.wisataciayumajakuning.model;
 
 public class Wisata {
-    private String name, category, city, description, idWisata, image, type, address;
+    private String name, category, city, description, idWisata, image, type, address, lat, lng;
 
     public Wisata(){
 
     }
 
-    public Wisata(String name, String category, String city, String description, String idWisata, String image, String type, String address) {
+    public Wisata(String name, String category, String city, String description, String idWisata, String image, String type, String address, String lat, String lng) {
         this.name = name;
         this.category = category;
         this.city = city;
@@ -16,6 +16,8 @@ public class Wisata {
         this.image = image;
         this.type = type;
         this.address = address;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public String getAddress() {
@@ -80,5 +82,21 @@ public class Wisata {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 }
