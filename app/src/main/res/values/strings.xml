@@ -40,4 +40,10 @@
     <string name="end_location">End Location</string>
     <string name="jarak_tempuh">Jarak Tempuh</string>
     <string name="waktu_tempuh">Waktu tempuh</string>
+    <string name="update_alamat_email">Update Alamat Email</string>
+    <string name="email_anda">Email Anda</string>
+    <string name="autentikasi">Autentikasi</string>
+    <string name="email_baru">Email Baru</string>
+    <string name="update_email">Update Email</string>
+    <string name="ubah_password">Ubah Password</string>
 </resources>

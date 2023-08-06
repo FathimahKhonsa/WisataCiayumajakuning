@@ -1,6 +1,8 @@
 package com.example.wisataciayumajakuning;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.wisataciayumajakuning.databinding.FragmentProfileBinding;
 import com.example.wisataciayumajakuning.model.User;
+import com.example.wisataciayumajakuning.user.LoginUserActivity;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,6 +71,15 @@ public class ProfileFragment extends Fragment {
                         .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
                         .start();
 
+            }
+        });
+
+        binding.logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getContext(), LoginUserActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -143,5 +155,25 @@ public class ProfileFragment extends Fragment {
        MimeTypeMap mime = MimeTypeMap.getSingleton();
        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
+ //   private void logOut(){
+ //       AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+ //       builder.setTitle("LogOut");
+ //       builder.setMessage("Apakah kamu ingin keluar dari aplikasi ini?" );
+ //       builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+ //           @Override
+ //           public void onClick(DialogInterface dialog, int which) {
+ //               FirebaseAuth.getInstance().signOut();
+ //               Intent intent = new Intent(getContext(), LoginUserActivity.class);
+ //               startActivity(intent);
+ //           }
+ //       });
+ //       builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+ //           @Override
+ //           public void onClick(DialogInterface dialog, int which) {
+ //               dialog.dismiss();
+ //           }
+ //       });
+ //   }
     
 }

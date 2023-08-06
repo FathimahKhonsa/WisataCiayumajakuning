@@ -24,6 +24,7 @@ import com.example.wisataciayumajakuning.AllConstant;
 import com.example.wisataciayumajakuning.R;
 import com.example.wisataciayumajakuning.databinding.ActivityDirectionBinding;
 import com.example.wisataciayumajakuning.databinding.BottomInformationBinding;
+import com.example.wisataciayumajakuning.databinding.LayoutAdressItemBinding;
 import com.example.wisataciayumajakuning.model.DirectionModel.DirectionLegModel;
 import com.example.wisataciayumajakuning.model.DirectionModel.DirectionResponseModel;
 import com.example.wisataciayumajakuning.model.DirectionModel.DirectionRouteModel;
@@ -68,7 +69,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private RetrofitAPI retrofitAPI;
     private BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
     private BottomInformationBinding informationBinding;
-    private int currentMode;
+    private LayoutAdressItemBinding adressItemBinding;
+//    private int currentMode;
 //    private Wisata wisata;
 
 
@@ -87,6 +89,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
         informationBinding = binding.bottomSheet;
         bottomSheetBehavior = BottomSheetBehavior.from(informationBinding.getRoot());
+
+        adressItemBinding = binding.layoutAddress;
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -118,8 +122,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                                 //getSupportActionBar().setTitle(ruteModel.getSummary());
 
                                 DirectionLegModel legModel = ruteModel.getLegs().get(0);
-                                binding.currentLocation.setText(legModel.getStartAddress());
-                                binding.endLocation.setText(legModel.getEndAddress());
+                                adressItemBinding.currentLocation.setText(legModel.getStartAddress());
+                                adressItemBinding.endLocation.setText(legModel.getEndAddress());
 
                                 informationBinding.txtTime.setText("Waktu tempuh: " + legModel.getDuration().getText());
                                 informationBinding.txtDistance.setText("Jarak tempuh: " + legModel.getDistance().getText());
@@ -182,8 +186,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
     private void clearUI() {
         gMap.clear();
-        binding.currentLocation.setText("");
-        binding.endLocation.setText("");
+        adressItemBinding.currentLocation.setText("");
+        adressItemBinding.endLocation.setText("");
         informationBinding.txtTime.setText("");
         informationBinding.txtDistance.setText("");
     }
@@ -304,9 +308,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
             path.add(new com.google.android.gms.maps.model.LatLng(lat * 1e-5, lng * 1e-5));
         }
-
         return path;
-
     }
 }
 

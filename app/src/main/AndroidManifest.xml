@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -16,11 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WisataCiayumajakuning"
         tools:targetApi="31">
+        <activity
+            android:name=".user.UbahPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".user.UbahEmailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".user.EditProfileActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.geo.API_KEY"
             android:value="@string/API_KEY" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -28,7 +36,7 @@
         <activity
             android:name=".wisata.DirectionActivity"
             android:exported="false"
-            android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar"/>
+            android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar" />
         <activity
             android:name=".wisata.CategoryWisataActivity"
             android:exported="false"
@@ -56,13 +64,12 @@
             android:exported="false"
             android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar" />
 
-       <meta-data
-           android:name="com.google.android.geo.API_KEY"
-           android:value="@string/API_KEY"/>
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/API_KEY" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
     </application>
+
 </manifest>
