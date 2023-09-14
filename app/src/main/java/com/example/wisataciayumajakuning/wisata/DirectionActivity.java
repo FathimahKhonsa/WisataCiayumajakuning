@@ -34,16 +34,21 @@ import com.example.wisataciayumajakuning.permission.AppPermission;
 import com.example.wisataciayumajakuning.webservice.RetrofitAPI;
 import com.example.wisataciayumajakuning.webservice.RetrofitClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,6 +67,9 @@ import retrofit2.Response;
 public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback{
     private ActivityDirectionBinding binding;
     private GoogleMap gMap;
+ //   private GeofencingClient geofencingClient;
+ //   private float geoFenceRadius = 10000;
+ //   private LatLng latLng = new LatLng(-6.7320229, 108.5523164);
     private AppPermission appPermission;
     private Location currentLocation;
     private boolean isLocationPermissionOk;
@@ -95,6 +103,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+//        geofencingClient = LocationServices.getGeofencingClient(this);  //1
     }
 
     private void getDirection(String mode){
@@ -163,7 +172,13 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                                 LatLng startLocation = new LatLng(legModel.getStartLocation().getLat(), legModel.getStartLocation().getLng());
                                 LatLng endLocation = new LatLng(legModel.getEndLocation().getLat(), legModel.getEndLocation().getLng());
 
-                                gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(startLocation, endLocation), 17));
+                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                builder.include(startLocation).include(endLocation);
+
+                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 17);
+                                gMap.animateCamera(cameraUpdate);
+
+                                //gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(startLocation, endLocation), 17));
                             } else {
                                 Toast.makeText(DirectionActivity.this, "No route find", Toast.LENGTH_SHORT).show();
                             }
@@ -195,8 +210,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
-    //    this.gMap = googleMap;
 
+    //    this.gMap = googleMap;
         if (appPermission.isLocationOK(this)){
             isLocationPermissionOk = true;
             setupGoogleMap();
@@ -216,6 +231,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                 appPermission.requestLocationPermission(DirectionActivity.this);
             }
         }
+        showArea();
     }
 
     @Override
@@ -239,6 +255,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         }
         gMap.setMyLocationEnabled(true);
         getCurrentLocation();
+//        addMarker(latLng);
     }
 
     private void getCurrentLocation() {
@@ -260,6 +277,33 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
+
+   private void showArea(){
+       Polygon polygon = gMap.addPolygon(new PolygonOptions()
+               .add(new LatLng(-6.69143, 108.56110),
+                       new LatLng(-6.69635, 108.54265),
+                       new LatLng(-6.72808, 108.54485),
+                       new LatLng(-6.73656, 108.51868),
+                       new LatLng(-6.78197, 108.53108),
+                       new LatLng(-6.79091, 108.54302),
+                       new LatLng(-6.74386, 108.56568),
+                       new LatLng(-6.74865, 108.58802)));
+       polygon.setStrokeColor(Color.RED);
+    }
+//    private void addMarker(LatLng latLng){                                          //2
+//        MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+//        gMap.addMarker(markerOptions);
+//    }
+
+//    private void addCircle(LatLng latLng, float radius){                            //3
+//        CircleOptions circleOptions = new CircleOptions();
+//        circleOptions.center(latLng);
+//        circleOptions.radius(radius);
+//        circleOptions.strokeColor(Color.argb(255, 255, 0, 0));
+//        circleOptions.fillColor(Color.argb(64, 255, 0, 0));
+//        circleOptions.strokeWidth(4);
+//        gMap.addCircle(circleOptions);
+//    }
 
     @Override
     public boolean onSupportNavigateUp() {
