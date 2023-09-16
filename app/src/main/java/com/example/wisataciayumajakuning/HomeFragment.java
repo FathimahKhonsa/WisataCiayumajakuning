@@ -2,7 +2,6 @@ package com.example.wisataciayumajakuning;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.wisataciayumajakuning.adapter.InfoWindowAdapter;
 import com.example.wisataciayumajakuning.adapter.WisataAdapter;
 import com.example.wisataciayumajakuning.databinding.FragmentHomeBinding;
+import com.example.wisataciayumajakuning.model.Area;
 import com.example.wisataciayumajakuning.model.Marker;
 import com.example.wisataciayumajakuning.model.User;
 import com.example.wisataciayumajakuning.model.Wisata;
@@ -40,7 +39,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -60,11 +58,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -81,6 +79,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
     private RecyclerView rvWisata;
     private ImageView alam, pantai, sejarah, kuliner, market;
     private List<Wisata> wisataList = new ArrayList<>();
+    private List<LatLng> areas = new ArrayList<LatLng>();
     private WisataAdapter adapter;
     private MarkerOptions markerOptions;
     private String username, profileImg;
@@ -161,16 +160,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
     }
 
     private void showArea(){
-        Polygon polygon = gMap.addPolygon(new PolygonOptions()
-                .add(new LatLng(-6.69143, 108.56110),
-                        new LatLng(-6.69635, 108.54265),
-                        new LatLng(-6.72808, 108.54485),
-                        new LatLng(-6.73656, 108.51868),
-                        new LatLng(-6.78197, 108.53108),
-                        new LatLng(-6.79091, 108.54302),
-                        new LatLng(-6.74386, 108.56568),
-                        new LatLng(-6.74865, 108.58802)));
-        polygon.setFillColor(Color.BLUE);
+        db.collection("area").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        Area area = documentSnapshot.toObject(Area.class);
+                        LatLng latLng = new LatLng(area.getLat(), area.getLng());
+                        areas.add(latLng);
+                    }
+                    Polygon polygon = gMap.addPolygon(new PolygonOptions()
+                            .addAll(areas));
+                    polygon.setFillColor(Color.TRANSPARENT);
+                    polygon.setStrokeColor(Color.BLUE);
+                } else {
+                    Toast.makeText(getContext(), "Cannot display polygon", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+//        Polygon polygon = gMap.addPolygon(new PolygonOptions()
+//                .add(new LatLng(-6.69143, 108.56110),
+//                        new LatLng(-6.69635, 108.54265),
+//                        new LatLng(-6.72808, 108.54485),
+//                        new LatLng(-6.73656, 108.51868),
+//                        new LatLng(-6.78197, 108.53108),
+//                        new LatLng(-6.79091, 108.54302),
+//                        new LatLng(-6.74386, 108.56568),
+//                        new LatLng(-6.74865, 108.58802)));
+//        polygon.setFillColor(Color.BLUE);
     }
 
     private void userProfile() {
