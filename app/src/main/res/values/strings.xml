@@ -46,4 +46,8 @@
     <string name="email_baru">Email Baru</string>
     <string name="update_email">Update Email</string>
     <string name="ubah_password">Ubah Password</string>
+    <string name="harga_tiket_masuk">Harga Tiket Masuk</string>
+    <string name="umum">Umum :</string>
+    <string name="jam_operasional">Jam Operasional</string>
+    <string name="oleh">Oleh</string>
 </resources>

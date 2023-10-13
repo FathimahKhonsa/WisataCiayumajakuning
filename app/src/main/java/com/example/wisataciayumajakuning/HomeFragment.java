@@ -29,6 +29,7 @@ import com.example.wisataciayumajakuning.adapter.InfoWindowAdapter;
 import com.example.wisataciayumajakuning.adapter.WisataAdapter;
 import com.example.wisataciayumajakuning.databinding.FragmentHomeBinding;
 import com.example.wisataciayumajakuning.model.Area;
+import com.example.wisataciayumajakuning.model.Geometry;
 import com.example.wisataciayumajakuning.model.Marker;
 import com.example.wisataciayumajakuning.model.User;
 import com.example.wisataciayumajakuning.model.Wisata;
@@ -44,9 +45,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -60,9 +60,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -79,7 +87,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
     private RecyclerView rvWisata;
     private ImageView alam, pantai, sejarah, kuliner, market;
     private List<Wisata> wisataList = new ArrayList<>();
-    private List<LatLng> areas = new ArrayList<LatLng>();
+    private List<LatLng> latLngList = new ArrayList<>();
     private WisataAdapter adapter;
     private MarkerOptions markerOptions;
     private String username, profileImg;
@@ -154,40 +162,45 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
         }else {
             requestLocation();
         }
-
-        showArea();
+        retrieveFromResource();
+//        showArea();
         showMarker();
     }
 
-    private void showArea(){
-        db.collection("area").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        Area area = documentSnapshot.toObject(Area.class);
-                        LatLng latLng = new LatLng(area.getLat(), area.getLng());
-                        areas.add(latLng);
-                    }
-                    Polygon polygon = gMap.addPolygon(new PolygonOptions()
-                            .addAll(areas));
-                    polygon.setFillColor(Color.TRANSPARENT);
-                    polygon.setStrokeColor(Color.BLUE);
-                } else {
-                    Toast.makeText(getContext(), "Cannot display polygon", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-//        Polygon polygon = gMap.addPolygon(new PolygonOptions()
-//                .add(new LatLng(-6.69143, 108.56110),
-//                        new LatLng(-6.69635, 108.54265),
-//                        new LatLng(-6.72808, 108.54485),
-//                        new LatLng(-6.73656, 108.51868),
-//                        new LatLng(-6.78197, 108.53108),
-//                        new LatLng(-6.79091, 108.54302),
-//                        new LatLng(-6.74386, 108.56568),
-//                        new LatLng(-6.74865, 108.58802)));
-//        polygon.setFillColor(Color.BLUE);
+//    private void showArea(){
+//        db.collection("area").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()){
+//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+//                        Area area = documentSnapshot.toObject(Area.class);
+//                        LatLng latLng = new LatLng(area.getLat(), area.getLng());
+//                        areas.add(latLng);
+//                    }
+//                    Polygon polygon = gMap.addPolygon(new PolygonOptions()
+//                            .addAll(areas));
+//                    polygon.setFillColor(Color.TRANSPARENT);
+//                    polygon.setStrokeColor(Color.BLUE);
+//                } else {
+//                    Toast.makeText(getContext(), "Cannot display polygon", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
+
+    private void retrieveFromResource(){
+        try {
+            GeoJsonLayer layer = new GeoJsonLayer(gMap, R.raw.area_boundaries, getContext());
+            GeoJsonPolygonStyle polygonStyle = layer.getDefaultPolygonStyle();
+            polygonStyle.setStrokeColor(Color.BLUE);
+            polygonStyle.setStrokeWidth(4);
+            layer.addLayerToMap();
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void userProfile() {
@@ -205,7 +218,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
                 }
                 binding.progressBar.setVisibility(View.GONE);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getActivity(), "Terjadi kesalahan, tidak dapat memuat username", Toast.LENGTH_LONG).show();
@@ -330,8 +342,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
                         }
                     }
                 });
-
         getCurrentLocation();
+
     }
 
     private void getCurrentLocation() {
@@ -346,10 +358,80 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
             @Override
             public void onSuccess(Location location) {
                 currentLocation = location;
-
+//                if (cointainsLocation(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), areas, true)){
+//                    Toast.makeText(getContext(), "User Location inside Area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(getContext(), "User Location outside Area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }
+
+
+//    private void showArea(){
+//        db.collection("area").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()){
+//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+//                        Area area = documentSnapshot.toObject(Area.class);
+//                        LatLng latLng = new LatLng(area.getLat(), area.getLng());
+//                        areas.add(latLng);
+//                    }
+//                    Polygon polygon = gMap.addPolygon(new PolygonOptions()
+//                            .addAll(areas));
+//                    polygon.setFillColor(Color.TRANSPARENT);
+//                    polygon.setStrokeColor(Color.BLUE);
+//                } else {
+//                    Toast.makeText(getContext(), "Cannot display polygon", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+//        areas.add(new LatLng(-6.24864, 107.92192));
+//        areas.add(new LatLng(-6.22543, 108.19932));
+//        areas.add(new LatLng(-6.24727, 108.34626));
+//        areas.add(new LatLng(-6.48066, 108.53441));
+//        areas.add(new LatLng(-6.51675, 108.53962));
+//        areas.add(new LatLng(-6.76302, 108.67391));
+//        areas.add(new LatLng(-6.73078, 108.83920));
+//        areas.add(new LatLng(-6.83216, 108.82284));
+//        areas.add(new LatLng(-7.11180, 108.76882));
+//        areas.add(new LatLng(-7.19492, 108.56145));
+//        areas.add(new LatLng(-7.07154, 108.38696));
+//        areas.add(new LatLng(-7.06745, 108.15487));
+//        areas.add(new LatLng(-7.03883, 108.13702));
+//        areas.add(new LatLng(-6.92706, 108.21942));
+//        areas.add(new LatLng(-6.82208, 108.15762));
+//        areas.add(new LatLng(-6.75116, 108.14938));
+//        areas.add(new LatLng(-6.66153, 108.02676));
+//        areas.add(new LatLng(-6.57149, 107.85098));
+
+//        Polygon polygon = gMap.addPolygon(new PolygonOptions()
+//                .addAll(areas));
+//        polygon.setStrokeColor(Color.BLUE);
+
+//        Polygon polygon = gMap.addPolygon(new PolygonOptions()
+//                .add(new LatLng(-6.24864, 107.92192),
+//                        new LatLng(-6.22543, 108.19932),
+//                        new LatLng(-6.24727, 108.34626),
+//                        new LatLng(-6.48066, 108.53441),
+//                        new LatLng(-6.51675, 108.53962),
+//                        new LatLng(-6.76302, 108.67391),
+//                        new LatLng(-6.73078, 108.83920),
+//                        new LatLng(-6.83216, 108.82284),
+//                        new LatLng(-7.11180, 108.76882),
+//                        new LatLng(-7.19492, 108.56145),
+//                        new LatLng(-7.07154, 108.38696),
+//                        new LatLng(-7.06745, 108.15487),
+//                        new LatLng(-7.03883, 108.13702),
+//                        new LatLng(-6.92706, 108.21942),
+//                        new LatLng(-6.82208, 108.15762),
+//                        new LatLng(-6.75116, 108.14938),
+//                        new LatLng(-6.66153, 108.02676),
+//                        new LatLng(-6.57149, 107.85098)));
+//        polygon.setFillColor(Color.BLUE);
+//    }
 
     private void showMarker(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Markers");
@@ -375,7 +457,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
                     });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -383,4 +464,64 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
         });
     }
 
+//    public double coordinates(){
+//        Geometry geometry = new Geometry();
+//        Gson gson = new Gson();
+//        try {
+//            FileReader reader = new FileReader("area_boundaries.json");
+//            geometry = gson.fromJson(reader, Geometry.class);
+
+//            JSONArray coordinatesArray = geometry.getCoordinates();
+//            if (coordinatesArray.length() == 0){
+//                Toast.makeText(getContext(), "No coordinates found", Toast.LENGTH_SHORT).show();
+//            }
+
+//            JSONArray polygonArray = coordinatesArray.getJSONArray(0);
+//            JSONArray exteriorArray = polygonArray.getJSONArray(0);
+
+//            Double result = new Double;
+//            for (int i = 0; i< exteriorArray.length(); i++){
+//                JSONArray point = coordinatesArray.getJSONArray(i);
+//                result[i][0] = point.getDouble(0);
+//                result[i][1] = point.getDouble(1);
+//            }
+//            return result;
+
+//            LatLng latLng = new LatLng()
+
+//        } catch (FileNotFoundException e){
+//            throw new RuntimeException(e);
+//        } catch (JSONException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    public static boolean cointainsLocation(LatLng point, List<LatLng> polygon, boolean geodesic){
+        int intersectCount = 0;
+        for (int j = 0; j < polygon.size() - 1; j++){
+            if (rayCastIntersect(point, polygon.get(j), polygon.get(j + 1))){
+                intersectCount++;
+            }
+        }
+        return ((intersectCount % 2) == 1); //odd is inside, even is outside
+    }
+
+    private static boolean rayCastIntersect(LatLng point, LatLng vertA, LatLng vertB){
+        double aY = vertA.latitude;
+        double bY = vertB.latitude;
+        double aX = vertA.longitude;
+        double bX = vertB.longitude;
+        double pY = point.latitude;
+        double pX = point.longitude;
+
+        if ((aY>pY && bY>pY) || (aY<pY && bY<pY) || (aX<pX && bX<pX)){
+            return false;
+        }
+
+        double m = (aY - bY) / (aX - bX);
+        double bee = (-aX)*m + aY;
+        double x = (pY - bee) / m;
+
+        return  x > pX;
+    }
 }

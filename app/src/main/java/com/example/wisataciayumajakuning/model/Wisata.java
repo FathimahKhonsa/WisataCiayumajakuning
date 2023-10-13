@@ -3,11 +3,14 @@ package com.example.wisataciayumajakuning.model;
 public class Wisata {
     private String name, category, city, description, idWisata, image, type, address, lat, lng;
 
+    private String tiketUmum, tiketDewasa, tiketAnak, tiketPelajar, jamOperasional;
+
     public Wisata(){
 
     }
 
-    public Wisata(String name, String category, String city, String description, String idWisata, String image, String type, String address, String lat, String lng) {
+    public Wisata(String name, String category, String city, String description, String idWisata, String image, String type, String address, String lat, String lng
+    , String tiketUmum, String tiketAnak, String tiketPelajar, String tiketDewasa, String jamOperasional) {
         this.name = name;
         this.category = category;
         this.city = city;
@@ -18,6 +21,51 @@ public class Wisata {
         this.address = address;
         this.lat = lat;
         this.lng = lng;
+        this.tiketAnak = tiketAnak;
+        this.tiketUmum = tiketUmum;
+        this.tiketPelajar = tiketPelajar;
+        this.tiketDewasa = tiketDewasa;
+        this.jamOperasional = jamOperasional;
+    }
+
+    public String getTiketUmum() {
+        return tiketUmum;
+    }
+
+    public void setTiketUmum(String tiketUmum) {
+        this.tiketUmum = tiketUmum;
+    }
+
+    public String getTiketDewasa() {
+        return tiketDewasa;
+    }
+
+    public void setTiketDewasa(String tiketDewasa) {
+        this.tiketDewasa = tiketDewasa;
+    }
+
+    public String getTiketAnak() {
+        return tiketAnak;
+    }
+
+    public void setTiketAnak(String tiketAnak) {
+        this.tiketAnak = tiketAnak;
+    }
+
+    public String getTiketPelajar() {
+        return tiketPelajar;
+    }
+
+    public void setTiketPelajar(String tiketPelajar) {
+        this.tiketPelajar = tiketPelajar;
+    }
+
+    public String getJamOperasional() {
+        return jamOperasional;
+    }
+
+    public void setJamOperasional(String jamOperasional) {
+        this.jamOperasional = jamOperasional;
     }
 
     public String getAddress() {

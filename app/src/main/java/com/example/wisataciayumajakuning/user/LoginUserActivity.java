@@ -97,17 +97,17 @@ public class LoginUserActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null){
-            reload();
-        } else {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Sesi Anda telah habis", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if (currentUser != null){
+//            reload();
+//        } else {
+//            FirebaseAuth.getInstance().signOut();
+//            Toast.makeText(this, "Sesi Anda telah habis", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void reload(){
         Intent intent = new Intent(LoginUserActivity.this, MainActivity.class);

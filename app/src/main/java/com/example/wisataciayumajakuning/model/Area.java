@@ -1,32 +1,46 @@
 package com.example.wisataciayumajakuning.model;
 
 import com.google.firebase.firestore.GeoPoint;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class Area {
-    Double lat, lng;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.util.List;
 
-    public Area(){
+public class Area implements Serializable {
+    @SerializedName("features")
+    @Expose
+    private List<Feature> features;
+    private final static long serialVersionUID = 4497006938644946260L;
 
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public Area() {
     }
 
-    public Area(Double lat, Double lng) {
-        this.lat = lat;
-        this.lng = lng;
+    /**
+     *
+     * @param features
+     */
+    public Area(List<Feature> features) {
+        super();
+        this.features = features;
     }
 
-    public Double getLat() {
-        return lat;
+    public List<Feature> getFeatures() {
+        return features;
     }
 
-    public void setLat(Double lat) {
-        this.lat = lat;
+    public void setFeatures(List<Feature> features) {
+        this.features = features;
     }
 
-    public Double getLng() {
-        return lng;
+    public Area withFeatures(List<Feature> features) {
+        this.features = features;
+        return this;
     }
 
-    public void setLng(Double lng) {
-        this.lng = lng;
-    }
 }

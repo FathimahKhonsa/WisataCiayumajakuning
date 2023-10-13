@@ -27,13 +27,18 @@ public class DetailWisataActivity extends AppCompatActivity {
         binding.kotaWisata.setText(getIntent().getStringExtra("city"));
         binding.deskripsiWisata.setText(getIntent().getStringExtra("description"));
         binding.tempatWisata.setText(getIntent().getStringExtra("address"));
+        binding.tiketAnak.setText(getIntent().getStringExtra("anak"));
+        binding.tiketDewasa.setText(getIntent().getStringExtra("dewasa"));
+        binding.tiketUmum.setText(getIntent().getStringExtra("umum"));
+        binding.tiketPelajar.setText(getIntent().getStringExtra("pelajar"));
+        binding.jamOperasional.setText(getIntent().getStringExtra("operasional"));
         wisataImg = getIntent().getStringExtra("img");
         lat = getIntent().getStringExtra("lat");
         lng = getIntent().getStringExtra("lng");
 
         Glide.with(this).load(wisataImg).centerCrop().into(binding.wisataImg);
 
-        binding.btnRute.setOnClickListener(v -> {
+        binding.fabRoute.setOnClickListener(v -> {
             Intent intent = new Intent(DetailWisataActivity.this, DirectionActivity.class);
             intent.putExtra("lat", lat);
             intent.putExtra("lng", lng);

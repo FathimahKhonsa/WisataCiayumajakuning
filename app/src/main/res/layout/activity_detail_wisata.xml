@@ -44,20 +44,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:drawableStartCompat="@drawable/ic_location_white" />
 
-    <Button
-        android:id="@+id/btnRute"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginTop="300dp"
-        android:background="@drawable/button_custom_two"
-        android:text="@string/find_route"
-        android:textSize="14sp"
-        android:fontFamily="@font/nunitobold"
-        android:drawableEnd="@drawable/ic_search_route"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <LinearLayout
         android:id="@+id/layoutOne"
         android:layout_width="match_parent"
@@ -102,7 +88,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/alamat_wisata"
                     android:textColor="@color/Primary"
                     android:textSize="14sp"
@@ -113,14 +99,162 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/temapat_wisata"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textColor="@color/Primary"
                     android:fontFamily="@font/nunitoreguler"/>
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/underline"/>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/tiket"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/harga_tiket_masuk"
+                        android:textColor="@color/Primary"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/nunitosemibold"/>
+
+                    <TextView
+                        android:id="@+id/umum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tiket"
+                        android:text="@string/umum"
+                        android:textSize="12sp"
+                        android:textColor="@color/Primary"
+                        android:fontFamily="@font/nunitoreguler"/>
+
+                    <TextView
+                        android:id="@+id/tiket_umum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/umum"
+                        android:layout_marginStart="5dp"
+                        android:layout_below="@id/tiket"
+                        android:text="Rp 10.000"
+                        android:textSize="12sp"
+                        android:textColor="@color/Primary"
+                        android:fontFamily="@font/nunitoreguler"/>
+
+                    <TextView
+                        android:id="@+id/anak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/umum"
+                        android:text="Anak :"
+                        android:textSize="12sp"
+                        android:textColor="@color/Primary"
+                        android:fontFamily="@font/nunitoreguler"/>
+
+                    <TextView
+                        android:id="@+id/tiket_anak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/anak"
+                        android:layout_marginStart="5dp"
+                        android:layout_below="@id/umum"
+                        android:text="Rp 10.000"
+                        android:textSize="12sp"
+                        android:textColor="@color/Primary"
+                        android:fontFamily="@font/nunitoreguler"/>
+
+                    <TextView
+                        android:id="@+id/dewasa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tiket"
+                        android:layout_toEndOf="@id/tiket_umum"
+                        android:layout_marginStart="50dp"
+                        android:text="Dewasa :"
+                        android:textSize="12sp"
+                        android:textColor="@color/Primary"
+                        android:fontFamily="@font/nunitoreguler"/>
+
+                    <TextView
+                        android:id="@+id/tiket_dewasa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tiket"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@id/dewasa"
+                        android:fontFamily="@font/nunitoreguler"
+                        android:text="Rp 10.000"
+                        android:textColor="@color/Primary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/pelajar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/dewasa"
+                        android:layout_toEndOf="@id/tiket_umum"
+                        android:layout_marginStart="50dp"
+                        android:text="Pelajar :"
+                        android:textSize="12sp"
+                        android:textColor="@color/Primary"
+                        android:fontFamily="@font/nunitoreguler"/>
+
+                    <TextView
+                        android:id="@+id/tiket_pelajar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tiket_dewasa"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@id/pelajar"
+                        android:fontFamily="@font/nunitoreguler"
+                        android:text="Rp 10.000"
+                        android:textColor="@color/Primary"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/underline"/>
+
+                <TextView
+                    android:id="@+id/jam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/jam_operasional"
+                    android:textColor="@color/Primary"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/nunitosemibold"/>
+
+                <TextView
+                    android:id="@+id/jam_operasional"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:text="08.00 - 17.00"
+                    android:fontFamily="@font/nunitoreguler"
+                    android:textColor="@color/Primary"
+                    android:textSize="12sp"/>
+                
             </LinearLayout>
 
-
         </ScrollView>
+
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:contentDescription="route"
+        android:src="@drawable/ic_route"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
