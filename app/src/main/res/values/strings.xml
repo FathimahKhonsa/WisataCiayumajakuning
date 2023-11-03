@@ -50,4 +50,12 @@
     <string name="umum">Umum :</string>
     <string name="jam_operasional">Jam Operasional</string>
     <string name="oleh">Oleh</string>
+    <string name="personal">PERSONAL</string>
+    <string name="tentang_aplikasi">Tentang Aplikasi</string>
+    <string name="lainlain">Lainnya</string>
+    <string name="turn_right">Turn Right</string>
+    <string name="direction">Direction</string>
+    <string name="swipe_up_for_more_info">Swipe Up For More Info</string>
+    <string name="petunjuk_arah">Petunjuk Arah</string>
+    <string name="headline">Headline</string>
 </resources>

@@ -82,7 +82,7 @@
         android:id="@+id/settingsTv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:paddingTop="15dp"
         android:paddingStart="20dp"
         android:text="@string/settings"
@@ -128,55 +128,6 @@
            app:drawableStartCompat="@drawable/ic_email_primary"
            app:drawableEndCompat="@drawable/ic_next"/>
    </LinearLayout>
-
-    <TextView
-        android:id="@+id/lainnyaTv"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:paddingTop="15dp"
-        android:paddingStart="20dp"
-        android:text="@string/lainnya"
-        android:textSize="16sp"
-        android:fontFamily="@font/nunitobold"
-        android:background="@color/Secondary"
-        app:layout_constraintTop_toBottomOf="@id/layoutOne"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/lainnyaTv"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/deleteAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/hapus_akun"
-            android:textSize="16sp"
-            android:textColor="@color/PrimaryDark"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/nunitosemibold"
-            app:drawableStartCompat="@drawable/ic_delete"
-            app:drawableEndCompat="@drawable/ic_next" />
-
-        <TextView
-            android:id="@+id/logOut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/log_out"
-            android:textSize="16sp"
-            android:textColor="@color/PrimaryDark"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/nunitosemibold"
-            app:drawableStartCompat="@drawable/ic_logout"
-            app:drawableEndCompat="@drawable/ic_next"/>
-    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"

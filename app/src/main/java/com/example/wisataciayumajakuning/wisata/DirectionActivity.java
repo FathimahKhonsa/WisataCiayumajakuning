@@ -3,6 +3,7 @@ package com.example.wisataciayumajakuning.wisata;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -13,11 +14,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.wisataciayumajakuning.AllConstant;
 import com.example.wisataciayumajakuning.R;
+import com.example.wisataciayumajakuning.adapter.DirectionStepAdapter;
 import com.example.wisataciayumajakuning.databinding.ActivityDirectionBinding;
 import com.example.wisataciayumajakuning.databinding.BottomInformationBinding;
 import com.example.wisataciayumajakuning.databinding.LayoutAdressItemBinding;
@@ -44,7 +47,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.firebase.firestore.util.Assert;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.android.data.kml.KmlContainer;
@@ -55,7 +57,6 @@ import com.google.maps.android.data.kml.KmlPolygon;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,8 +83,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private boolean contains = false;
     private LatLng latLngTest;
     private List<LatLng> outerBoundary = new ArrayList<>();
-    private List<LatLng> areas = new ArrayList<>();
     private double distance;
+    private DirectionStepAdapter adapter;
 
 //    private int currentMode;
 //    private Wisata wisata;
@@ -95,6 +96,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         binding = ActivityDirectionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         appPermission = new AppPermission();
 
         endLat = Double.valueOf(getIntent().getStringExtra("lat"));
@@ -103,32 +106,18 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         retrofitAPI = RetrofitClient.getRetrofitClient().create(RetrofitAPI.class);
 
         informationBinding = binding.bottomSheet;
-        bottomSheetBehavior = BottomSheetBehavior.from(informationBinding.getRoot());
+        bottomSheetBehavior = (BottomSheetBehavior.from(informationBinding.getRoot()));
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        adapter = new DirectionStepAdapter();
+        informationBinding.rvSteps.setLayoutManager(new LinearLayoutManager(this));
+        informationBinding.rvSteps.setAdapter(adapter);
 
         adressItemBinding = binding.layoutAddress;
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-        areas.add(new LatLng(-6.24864, 107.92192));
-        areas.add(new LatLng(-6.22543, 108.19932));
-        areas.add(new LatLng(-6.24727, 108.34626));
-        areas.add(new LatLng(-6.48066, 108.53441));
-        areas.add(new LatLng(-6.51675, 108.53962));
-        areas.add(new LatLng(-6.76302, 108.67391));
-        areas.add(new LatLng(-6.73078, 108.83920));
-        areas.add(new LatLng(-6.83216, 108.82284));
-        areas.add(new LatLng(-7.11180, 108.76882));
-        areas.add(new LatLng(-7.19492, 108.56145));
-        areas.add(new LatLng(-7.07154, 108.38696));
-        areas.add(new LatLng(-7.06745, 108.15487));
-        areas.add(new LatLng(-7.03883, 108.13702));
-        areas.add(new LatLng(-6.92706, 108.21942));
-        areas.add(new LatLng(-6.82208, 108.15762));
-        areas.add(new LatLng(-6.75116, 108.14938));
-        areas.add(new LatLng(-6.66153, 108.02676));
-        areas.add(new LatLng(-6.57149, 107.85098));
 //        geofencingClient = LocationServices.getGeofencingClient(this);  //1
     }
 
@@ -165,7 +154,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             String url = "https://maps.googleapis.com/maps/api/directions/json?" +
                     "origin=" + lat + "," + lng +
                     "&destination=" + endLat + "," + endLng +
-                    "&mode=driving" +
+                    "&mode=driving" + "&language=id" +
                     "&key=" + getResources().getString(R.string.API_KEY);
 
             retrofitAPI.getDirection(url).enqueue(new Callback<DirectionResponseModel>() {
@@ -206,6 +195,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                                 gMap.addMarker(new MarkerOptions()
                                                 .position(new LatLng(legModel.getEndLocation().getLat(), legModel.getEndLocation().getLng())))
                                         .setTitle("End Location");
+
+                                adapter.setDirectionStepModelList(legModel.getSteps());
 
                                 List<LatLng> stepList = new ArrayList<>();
 
@@ -263,8 +254,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
     private void retrieveFromResource(){
         try {
-            layer = new KmlLayer(gMap, R.raw.ciayumajakuning, this);
-    //        layer.addLayerToMap();
+            layer = new KmlLayer(gMap, R.raw.ciayumajakuning_area, this);
+            layer.addLayerToMap();
         } catch (XmlPullParserException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -336,15 +327,21 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 //
                     clearUI();
 
-                    boolean isInside = ifUserInside(new LatLng(location.getLatitude(), location.getLongitude()));
+                //    double lat = -6.2918125;
+                //    double lng = 106.7991875;
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+                    latLngTest = new LatLng(lat, lng);
+
+                    boolean isInside = ifUserInside();
 
                     if (isInside){
                         Toast.makeText(DirectionActivity.this, "You are in the area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
-                        getDirection(location.getLatitude(), location.getLongitude());
+                        getDirection(lat, lng);
                     } else {
                         Toast.makeText(DirectionActivity.this, "You are outside the area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
-
-                        LatLng nearestPoint = findPoint(new LatLng(location.getLatitude(), location.getLongitude()), areas);
+                    //    getDirection(lat, lng);
+                        LatLng nearestPoint = findPoint(latLngTest, outerBoundary);
 //                        LatLng nearestPoint = nearest_point(new LatLng(location.getLatitude(), location.getLongitude()), areas);
                         Toast.makeText(DirectionActivity.this, "Nearest Point : " + nearestPoint, Toast.LENGTH_SHORT).show();
                         getDirection(nearestPoint.latitude, nearestPoint.longitude);
@@ -358,7 +355,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
 
-    private boolean ifUserInside(LatLng latLngTest) {
+    private boolean ifUserInside() {
         if (layer.getContainers() != null){
             for (KmlContainer container : layer.getContainers()){
                 if (container.getPlacemarks() != null){
@@ -369,8 +366,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                             KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
 
                             outerBoundary = polygon.getOuterBoundaryCoordinates();
-
-                            contains = PolyUtil.containsLocation(latLngTest, outerBoundary, true);
+                            contains = containsLocation(latLngTest, outerBoundary);
+                        //    contains = PolyUtil.containsLocation(latLngTest, outerBoundary, true);
 //                            listOut.addAll(outerBoundary);
 //                            Log.e("Tag", String.valueOf(listOut));
 
@@ -378,9 +375,12 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                                 List<List<LatLng>> innerBoundaries = polygon.getInnerBoundaryCoordinates();
                                 if (innerBoundaries != null){
                                     for (List<LatLng> innerBoundary : innerBoundaries){
-                                        if (PolyUtil.containsLocation(latLngTest, innerBoundary, true)){
+                                        if (containsLocation(latLngTest, innerBoundary)){
                                             contains = false;
                                         }
+                                      //  if (PolyUtil.containsLocation(latLngTest, innerBoundary, true)){
+                                      //      contains = false;
+                                      //  }
                                     }
                                 }
                             }
@@ -390,6 +390,35 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
         return contains;
+    }
+
+    public static boolean containsLocation(LatLng point, List<LatLng> polygon){
+        int intersectCount = 0;
+        for (int j = 0; j < polygon.size() - 1; j++){
+            if (rayCastIntersect(point, polygon.get(j), polygon.get(j + 1))){
+                intersectCount++;
+            }
+        }
+        return ((intersectCount % 2) == 1); //odd is inside, even is outside
+    }
+
+    private static boolean rayCastIntersect(LatLng point, LatLng vertA, LatLng vertB){
+        double aY = vertA.latitude;
+        double bY = vertB.latitude;
+        double aX = vertA.longitude;
+        double bX = vertB.longitude;
+        double pY = point.latitude;
+        double pX = point.longitude;
+
+        if ((aY>pY && bY>pY) || (aY<pY && bY<pY) || (aX<pX && bX<pX)){
+            return false;
+        }
+
+        double m = (aY - bY) / (aX - bX);
+        double bee = (-aX)*m + aY;
+        double x = (pY - bee) / m;
+
+        return  x > pX;
     }
 
 
@@ -454,7 +483,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
 
     private LatLng findPoint(LatLng test, List<LatLng> target){
-        double distance = 100000;
+        double distance = -1;
         LatLng minDistancePoint = test;
 
         if (test == null || target == null){
@@ -470,7 +499,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             }
 
             double currentDistance = PolyUtil.distanceToLine(test, point, target.get(segmentPoint));
-            if (distance == 100000 || currentDistance < distance){
+            if (distance == -1 || currentDistance < distance){
                 distance = currentDistance;
                 minDistancePoint = findNearestPoint(test, point, target.get(segmentPoint));
             }

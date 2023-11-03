@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunitoreguler"
                 android:text="@string/temapat_wisata"
-                android:textColor="@color/Primary"
+                android:textColor="@color/red"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>

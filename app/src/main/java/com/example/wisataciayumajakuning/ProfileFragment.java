@@ -20,7 +20,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.wisataciayumajakuning.databinding.FragmentProfileBinding;
 import com.example.wisataciayumajakuning.model.User;
+import com.example.wisataciayumajakuning.user.EditProfileActivity;
 import com.example.wisataciayumajakuning.user.LoginUserActivity;
+import com.example.wisataciayumajakuning.user.UbahEmailActivity;
+import com.example.wisataciayumajakuning.user.UbahPasswordActivity;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -74,11 +77,26 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        binding.logOut.setOnClickListener(new View.OnClickListener() {
+        binding.btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getContext(), LoginUserActivity.class);
+                Intent intent = new Intent(getContext(), EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.changeEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UbahEmailActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UbahPasswordActivity.class);
                 startActivity(intent);
             }
         });

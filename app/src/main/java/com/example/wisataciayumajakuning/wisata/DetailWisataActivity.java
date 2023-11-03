@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.example.wisataciayumajakuning.R;
@@ -22,8 +23,11 @@ public class DetailWisataActivity extends AppCompatActivity {
         binding = ActivityDetailWisataBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         name = getIntent().getStringExtra("name");
         binding.namaWisata.setText(name);
+        binding.headlineWisata.setText(getIntent().getStringExtra("headline"));
         binding.kotaWisata.setText(getIntent().getStringExtra("city"));
         binding.deskripsiWisata.setText(getIntent().getStringExtra("description"));
         binding.tempatWisata.setText(getIntent().getStringExtra("address"));

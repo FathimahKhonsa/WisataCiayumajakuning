@@ -17,6 +17,9 @@
         android:theme="@style/Theme.WisataCiayumajakuning"
         tools:targetApi="31">
         <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
+        <activity
             android:name=".CoverActivity"
             android:exported="true"
             android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar">
@@ -28,13 +31,16 @@
         </activity>
         <activity
             android:name=".user.UbahPasswordActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar" />
         <activity
             android:name=".user.UbahEmailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar" />
         <activity
             android:name=".user.EditProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar" />
 
         <meta-data
             android:name="com.google.geo.API_KEY"
@@ -62,8 +68,7 @@
         <activity
             android:name=".user.LoginUserActivity"
             android:exported="false"
-            android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar">
-        </activity>
+            android:theme="@style/Theme.WisataCiayumajakuning.NoactionBar"/>
         <activity
             android:name=".MainActivity"
             android:exported="false"

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+   <TextView
+       android:id="@+id/textStep"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="@string/turn_right"
+       android:textSize="14sp"
+       android:textColor="@color/red"
+       android:fontFamily="@font/nunitobold" />
+
+   <TextView
+       android:id="@+id/txtStepTime"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="5dp"
+       android:layout_below="@id/textStep"
+       android:text="10 min"
+       android:textSize="14sp"
+       android:textColor="@color/Primary"
+       android:fontFamily="@font/nunitosemibold"/>
+
+   <TextView
+       android:id="@+id/txtStepDistance"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="5dp"
+       android:layout_below="@id/txtStepTime"
+       android:text="200 meter"
+       android:textSize="14sp"
+       android:textColor="@color/Primary"
+       android:fontFamily="@font/nunitosemibold"/>
+
+</RelativeLayout>

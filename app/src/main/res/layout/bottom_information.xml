@@ -2,33 +2,66 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white"
-    android:elevation="7dp"
-    android:padding="25dp"
     app:behavior_hideable="false"
+    app:behavior_peekHeight="50dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
-    <TextView
-        android:id="@+id/txtDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:text="@string/jarak_tempuh"
-        android:textColor="@color/Primary"
-        android:fontFamily="@font/nunitobold"
-        android:textSize="12sp"/>
+        <LinearLayout
+            android:id="@+id/layoutOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp">
 
-    <TextView
-        android:id="@+id/txtTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtDistance"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/waktu_tempuh"
-        android:textColor="@color/Primary"
-        android:fontFamily="@font/nunitobold"
-        android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/txtDistance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/jarak_tempuh"
+                android:textColor="@color/Primary"
+                android:fontFamily="@font/nunitobold"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/txtTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtDistance"
+                android:text="@string/waktu_tempuh"
+                android:textColor="@color/Primary"
+                android:fontFamily="@font/nunitobold"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@drawable/underline" />
+
+            <TextView
+                android:id="@+id/txtDirection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTime"
+                android:layout_marginTop="10dp"
+                android:text="@string/petunjuk_arah"
+                android:textColor="@color/PrimaryDark"
+                android:textSize="14sp"
+                android:fontFamily="@font/nunitobold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSteps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layoutOne"
+                android:layout_marginTop="10dp"
+                tools:listitem="@layout/step_item_layout"
+                tools:orientation="vertical"
+                tools:scrollbars="vertical"/>
+        </LinearLayout>
+
+
 </RelativeLayout>

@@ -1,7 +1,7 @@
 package com.example.wisataciayumajakuning.model;
 
 public class Wisata {
-    private String name, category, city, description, idWisata, image, type, address, lat, lng;
+    private String name, category, city, description, idWisata, image, type, address, lat, lng, headline;
 
     private String tiketUmum, tiketDewasa, tiketAnak, tiketPelajar, jamOperasional;
 
@@ -10,7 +10,7 @@ public class Wisata {
     }
 
     public Wisata(String name, String category, String city, String description, String idWisata, String image, String type, String address, String lat, String lng
-    , String tiketUmum, String tiketAnak, String tiketPelajar, String tiketDewasa, String jamOperasional) {
+    , String tiketUmum, String tiketAnak, String tiketPelajar, String tiketDewasa, String jamOperasional, String headline) {
         this.name = name;
         this.category = category;
         this.city = city;
@@ -26,6 +26,7 @@ public class Wisata {
         this.tiketPelajar = tiketPelajar;
         this.tiketDewasa = tiketDewasa;
         this.jamOperasional = jamOperasional;
+        this.headline = headline;
     }
 
     public String getTiketUmum() {
@@ -146,5 +147,13 @@ public class Wisata {
 
     public void setLng(String lng) {
         this.lng = lng;
+    }
+
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
     }
 }

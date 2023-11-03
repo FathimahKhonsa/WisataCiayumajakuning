@@ -104,10 +104,10 @@ public class UbahPasswordActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(confirmaPassword)) {
             binding.layoutKonfirmasi.setError("Konfirmasi password Anda");
             binding.layoutKonfirmasi.requestFocus();
-        } else if (newPassword.matches(confirmaPassword)) {
+        } else if (!newPassword.matches(confirmaPassword)) {
             binding.layoutKonfirmasi.setError("Password Anda berbeda");
             binding.layoutKonfirmasi.requestFocus();
-        } else if (!oldPassword.matches(newPassword)) {
+        } else if (oldPassword.matches(newPassword)) {
             binding.layoutNewPass.setError("Masukkan password baru Anda");
             binding.layoutNewPass.requestFocus();
         } else {
@@ -118,10 +118,7 @@ public class UbahPasswordActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
                         Toast.makeText(UbahPasswordActivity.this, "Password Anda berhasil diubah", Toast.LENGTH_SHORT).show();
-                        Fragment fragment = new ProfileFragment();
-                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
-                        finish();
+//                        finish();
                     } else {
                         try {
                             throw task.getException();
@@ -130,6 +127,9 @@ public class UbahPasswordActivity extends AppCompatActivity {
                         }
                     }
                     binding.progressBar.setVisibility(View.GONE);
+                    Fragment fragment = new ProfileFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
                 }
             });
         }

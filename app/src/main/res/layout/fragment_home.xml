@@ -31,7 +31,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="20dp">
             <TextView
                 android:id="@+id/usernameTv"
                 android:layout_width="wrap_content"
@@ -163,11 +163,11 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/categoryKuliner"
+                        android:id="@+id/categoryOlehOleh"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:padding="12dp"
-                        android:src="@drawable/ic_food"
+                        android:src="@drawable/ic_market"
                         android:background="@drawable/custom_card"/>
 
                     <TextView
@@ -188,17 +188,17 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/categoryOlehOleh"
+                        android:id="@+id/categoryLainnya"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:padding="12dp"
-                        android:src="@drawable/ic_market"
+                        android:src="@drawable/ic_list"
                         android:background="@drawable/custom_card"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/oleh_oleh"
+                        android:text="@string/lainlain"
                         android:textAlignment="center"
                         android:textSize="12sp"
                         android:textColor="@color/white"

@@ -28,8 +28,6 @@ import com.bumptech.glide.Glide;
 import com.example.wisataciayumajakuning.adapter.InfoWindowAdapter;
 import com.example.wisataciayumajakuning.adapter.WisataAdapter;
 import com.example.wisataciayumajakuning.databinding.FragmentHomeBinding;
-import com.example.wisataciayumajakuning.model.Area;
-import com.example.wisataciayumajakuning.model.Geometry;
 import com.example.wisataciayumajakuning.model.Marker;
 import com.example.wisataciayumajakuning.model.User;
 import com.example.wisataciayumajakuning.model.Wisata;
@@ -45,7 +43,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -60,15 +57,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +118,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
 
         binding.categoryAlam.setOnClickListener(this);
         binding.categoryPantai.setOnClickListener(this);
-        binding.categoryKuliner.setOnClickListener(this);
+        binding.categoryLainnya.setOnClickListener(this);
         binding.categoryOlehOleh.setOnClickListener(this);
         binding.categorySejarah.setOnClickListener(this);
 
@@ -255,7 +248,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
             Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
             intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "alam");
             startActivity(intent);
-        } else if (id == R.id.categoryKuliner) {
+        } else if (id == R.id.categoryLainnya) {
             Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
             intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "kuliner");
             startActivity(intent);

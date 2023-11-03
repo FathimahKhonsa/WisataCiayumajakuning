@@ -22,6 +22,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class UbahEmailActivity extends AppCompatActivity {
     private ActivityUbahEmailBinding binding;
@@ -94,6 +96,9 @@ public class UbahEmailActivity extends AppCompatActivity {
                                         } else {
                                             binding.progressBar.setVisibility(View.GONE);
                                             updateEmail(currentUser);
+                                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                                            String uId = currentUser.getUid();
+                                            reference.child(uId).child("email").setValue(userNewEmail);
                                         }
                                     }
                                 });
@@ -118,12 +123,17 @@ public class UbahEmailActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isComplete()){
                     Toast.makeText(UbahEmailActivity.this, "Anda berhasil mengupdate email Anda", Toast.LENGTH_SHORT).show();
-                    Fragment fragment = new ProfileFragment();
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
-                    finish();
+                    reload();
+                }else {
+                    Toast.makeText(UbahEmailActivity.this, "Anda gagal mengupdate email Anda", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private void reload(){
+        Fragment fragment = new ProfileFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
     }
 }

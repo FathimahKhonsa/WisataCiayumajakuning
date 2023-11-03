@@ -72,6 +72,7 @@ public class WisataAdapter extends RecyclerView.Adapter<WisataAdapter.MyViewHold
                 intent.putExtra("pelajar", wisataList.get(position).getTiketPelajar());
                 intent.putExtra("dewasa", wisataList.get(position).getTiketDewasa());
                 intent.putExtra("operasional", wisataList.get(position).getJamOperasional());
+                intent.putExtra("headline", wisataList.get(position).getHeadline());
                 itemView.getContext().startActivity(intent);
             });
         }
