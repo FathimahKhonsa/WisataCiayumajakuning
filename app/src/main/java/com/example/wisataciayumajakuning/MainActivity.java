@@ -26,9 +26,11 @@ import com.google.android.material.navigation.NavigationBarView;
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
+        //mendapatkan fragment penampung kosong untuk menukar tempat tujuan ketika user menavigasi aplikasi
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_container);
+        //menavigasi ke halaman tujuan
         NavController navController = navHostFragment.getNavController();
+        //menyiapkan view navigasi bawah untuk digunakan dengan navcontroller
         NavigationUI.setupWithNavController(binding.bottomNav, navController);
 
  //       getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);

@@ -58,4 +58,11 @@
     <string name="swipe_up_for_more_info">Swipe Up For More Info</string>
     <string name="petunjuk_arah">Petunjuk Arah</string>
     <string name="headline">Headline</string>
+    <string name="lokasi_awal">Lokasi Awal:</string>
+    <string name="tolong_masukkan_email_anda_untuk_mengatur_ulang_kata_sandi">Tolong Masukkan Email Anda untuk Mengatur Ulang Kata Sandi</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="deskripsi_tentang">Aplikasi Pariwisata Ciayumajakuning merupakan sebuah aplikasi berbasis android yang menyajikan informasi seputar objek wisata yang tersebar di wilayah Ciayumajakuning dan memberikan rute untuk memudahkan user menuju ke kolasi objek wisata tujuan</string>
+    <string name="developer">Developer</string>
+    <string name="fathimah_khonsa">Fathimah Khonsa</string>
+    <string name="email_dev">khonsa.fathimah@gmail.com</string>
 </resources>

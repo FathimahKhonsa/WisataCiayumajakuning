@@ -38,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -68,9 +69,6 @@ import retrofit2.Response;
 public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback{
     private ActivityDirectionBinding binding;
     private GoogleMap gMap;
- //   private GeofencingClient geofencingClient;
- //   private float geoFenceRadius = 10000;
- //   private LatLng latLng = new LatLng(-6.7320229, 108.5523164);
     private AppPermission appPermission;
     private Location currentLocation;
     private boolean isLocationPermissionOk;
@@ -86,10 +84,6 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private double distance;
     private DirectionStepAdapter adapter;
 
-//    private int currentMode;
-//    private Wisata wisata;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,34 +92,38 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
+        //menghubungkan objek kelas appPemission ke AppPermission
         appPermission = new AppPermission();
 
         endLat = Double.valueOf(getIntent().getStringExtra("lat"));
         endLng = Double.valueOf(getIntent().getStringExtra("lng"));
 
+        //membuat instance retrofit client
         retrofitAPI = RetrofitClient.getRetrofitClient().create(RetrofitAPI.class);
 
         informationBinding = binding.bottomSheet;
         bottomSheetBehavior = (BottomSheetBehavior.from(informationBinding.getRoot()));
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+        //menghubungkan objek kelas adapter ke adapter
         adapter = new DirectionStepAdapter();
+        //menampilkan recycler view dengan layout linear
         informationBinding.rvSteps.setLayoutManager(new LinearLayoutManager(this));
+        //menghubungkan kelas adapter ke recycler view
         informationBinding.rvSteps.setAdapter(adapter);
 
         adressItemBinding = binding.layoutAddress;
 
+        //mengelola siklus proses peta dan merupakan elemen induk dari UI aplikasi
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-//        geofencingClient = LocationServices.getGeofencingClient(this);  //1
     }
 
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
-    //    this.gMap = googleMap;
+        //mengecek apakah user sudah memberikan izin untuk akses lokasi
         if (appPermission.isLocationOK(this)){
             isLocationPermissionOk = true;
             setupGoogleMap();
@@ -151,6 +149,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private void getDirection(Double lat, Double lng){
         if (isLocationPermissionOk){
             binding.progressBar.setVisibility(View.VISIBLE);
+            //mendapatkan
             String url = "https://maps.googleapis.com/maps/api/directions/json?" +
                     "origin=" + lat + "," + lng +
                     "&destination=" + endLat + "," + endLng +
@@ -164,18 +163,16 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                     String res = gson.toJson(response.body());
                     Log.d("TAG", "onResponse: " + res);
 
+                    //untuk memetakan kelas model ke respons -> response.body( )
                     if (response.errorBody() == null) {
                         if (response.body() != null) {
-//                            clearUI();
-
                             if (response.body().getDirectionRouteModels().size() > 0){
                                 DirectionRouteModel ruteModel = response.body().getDirectionRouteModels().get(0);
-                                //getSupportActionBar().setTitle(ruteModel.getSummary());
 
                                 DirectionLegModel legModel = ruteModel.getLegs().get(0);
                                 adressItemBinding.currentLocation.setText(legModel.getStartAddress());
                                 adressItemBinding.endLocation.setText(legModel.getEndAddress());
-
+                                //mendapatkan jarak
                                 String jarak = legModel.getDistance().getText();
 
                                 try {
@@ -183,19 +180,19 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                                 }catch (NumberFormatException e){
                                     Toast.makeText(DirectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
-
+                                                                                      //mendapatkan waktuh tempuh
                                 informationBinding.txtTime.setText("Waktu tempuh: " + legModel.getDuration().getText());
                                 informationBinding.txtDistance.setText("Jarak tempuh: " + jarak);
-
-
+                                //menambahkan penanda berwarna biru pada peta untuk menunjukkan lokasi awal
                                 gMap.addMarker(new MarkerOptions()
-                                                .position(new LatLng(legModel.getStartLocation().getLat(), legModel.getStartLocation().getLng())))
+                                                .position(new LatLng(legModel.getStartLocation().getLat(), legModel.getStartLocation().getLng())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
                                         .setTitle("Start Location");
-
+                                //menambahkan penanda berwarna merah pada peta untuk menunjukkan lokasi tujuan
                                 gMap.addMarker(new MarkerOptions()
                                                 .position(new LatLng(legModel.getEndLocation().getLat(), legModel.getEndLocation().getLng())))
                                         .setTitle("End Location");
 
+                                //menampilkan langkah - langkah menuju lokasi objek wisata
                                 adapter.setDirectionStepModelList(legModel.getSteps());
 
                                 List<LatLng> stepList = new ArrayList<>();
@@ -206,23 +203,22 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                                         .clickable(true)
                                         .visible(true);
 
-                                List<PatternItem> pattern;
-                                pattern = Arrays.asList(new Dash(30));
-
-                                options.pattern(pattern);
-
                                 for (DirectionStepModel stepModel : legModel.getSteps()){
-                                    List<com.google.android.gms.maps.model.LatLng> decodedLatLng = decode(stepModel.getPolyline().getPoints());
-                                    for (com.google.android.gms.maps.model.LatLng latLng : decodedLatLng){
+                                    List<LatLng> decodedLatLng = decode(stepModel.getPolyline().getPoints());
+                                    for (LatLng latLng : decodedLatLng){
+                                        //menambahkan titik - titik koordinat yang diperoleh dari proses decode ke dalam stepList
                                         stepList.add(new LatLng(latLng.latitude, latLng.longitude));
                                     }
                                 }
 
+                                //menambahkan simpul / titik - titik ke ujung polyline yang sedang dibangun
                                 options.addAll(stepList);
 
+                                //menambahkan polyline pada peta untuk menggambarkan rute
                                 Polyline polyline = gMap.addPolyline(options);
-
+                                //mendapatkan posisi awal user
                                 LatLng startLocation = new LatLng(legModel.getStartLocation().getLat(), legModel.getStartLocation().getLng());
+                                //mendapatkan posisi akhir atau lokasi tujuan
                                 LatLng endLocation = new LatLng(legModel.getEndLocation().getLat(), legModel.getEndLocation().getLng());
 
                                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -231,7 +227,6 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 17);
                                 gMap.animateCamera(cameraUpdate);
 
-                                //gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(startLocation, endLocation), 17));
                             } else {
                                 Toast.makeText(DirectionActivity.this, "No route find", Toast.LENGTH_SHORT).show();
                             }
@@ -243,7 +238,6 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                     }
                     binding.progressBar.setVisibility(View.GONE);
                 }
-
                 @Override
                 public void onFailure(Call<DirectionResponseModel> call, Throwable t) {
 
@@ -255,33 +249,18 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private void retrieveFromResource(){
         try {
             layer = new KmlLayer(gMap, R.raw.ciayumajakuning_area, this);
+            //menampilkan batas wilayah Ciayumajakuning pada peta
             layer.addLayerToMap();
         } catch (XmlPullParserException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        //    try {
-
-    //        GeoJsonLayer layer = new GeoJsonLayer(gMap, R.raw.area_boundaries, this);
-    //        GeoJsonPolygonStyle polygonStyle = layer.getDefaultPolygonStyle();
-    //        polygonStyle.setStrokeColor(Color.RED);
-    //        polygonStyle.setStrokeWidth(4);
-    //        layer.addLayerToMap();
-    //    } catch (IOException e) {
-    //        e.printStackTrace();
-    //    } catch (XmlPullParserException e) {
-    //        e.printStackTrace();
-    //    }
     }
-
-
 
     private void clearUI() {
         gMap.clear();
         retrieveFromResource();
-
         adressItemBinding.currentLocation.setText("");
         adressItemBinding.endLocation.setText("");
         informationBinding.txtTime.setText("");
@@ -308,8 +287,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             return;
         }
         gMap.setMyLocationEnabled(true);
+        //memanggil method getCurrentLocation( ) untuk mendapatkan lokasi user
         getCurrentLocation();
-//        addMarker(latLng);
     }
 
     private void getCurrentLocation() {
@@ -324,29 +303,27 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             public void onSuccess(Location location) {
                 if (location != null){
                     currentLocation = location;
-//
                     clearUI();
 
-                //    double lat = -6.2918125;
-                //    double lng = 106.7991875;
+                //    double lat = -6.7141875;
+                //    double lng = 108.5391875;
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();
                     latLngTest = new LatLng(lat, lng);
 
                     boolean isInside = ifUserInside();
-
+                    //mengecek apakah user ada di wilayah ciayumajakuning atau tidak
                     if (isInside){
                         Toast.makeText(DirectionActivity.this, "You are in the area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
+                        //mengambil rute ketika user ada di wilayah Ciayumajakuning
                         getDirection(lat, lng);
                     } else {
                         Toast.makeText(DirectionActivity.this, "You are outside the area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
-                    //    getDirection(lat, lng);
+                        //mendapatkan titik batas wilayah Ciayumajakuning yang terdekat dengan user
                         LatLng nearestPoint = findPoint(latLngTest, outerBoundary);
-//                        LatLng nearestPoint = nearest_point(new LatLng(location.getLatitude(), location.getLongitude()), areas);
                         Toast.makeText(DirectionActivity.this, "Nearest Point : " + nearestPoint, Toast.LENGTH_SHORT).show();
+                        //mengambil rute ketika user di luar wilayah Ciayumajakuning
                         getDirection(nearestPoint.latitude, nearestPoint.longitude);
-//                        getDirection(nearestPoint.latitude, nearestPoint.longitude);
-//                        Toast.makeText(DirectionActivity.this, "Nearest point: " + nearestPoint, Toast.LENGTH_SHORT).show();
                         }
                 } else {
                     Toast.makeText(DirectionActivity.this, "Location Not Found", Toast.LENGTH_SHORT).show();
@@ -357,6 +334,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
     private boolean ifUserInside() {
         if (layer.getContainers() != null){
+            //mendapatkan container
             for (KmlContainer container : layer.getContainers()){
                 if (container.getPlacemarks() != null){
                     for (KmlPlacemark placemark : container.getPlacemarks()){
@@ -365,24 +343,22 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                         if(placemark.getGeometry() instanceof KmlPolygon){
                             KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
 
+                            //mendapatkan batas luar polygon
                             outerBoundary = polygon.getOuterBoundaryCoordinates();
+                            //memeriksa apakah titik uji terletak di dalam polygon
                             contains = containsLocation(latLngTest, outerBoundary);
-                        //    contains = PolyUtil.containsLocation(latLngTest, outerBoundary, true);
-//                            listOut.addAll(outerBoundary);
-//                            Log.e("Tag", String.valueOf(listOut));
 
                             if (contains){
+                                //mendapatkan batas dalam polygon dan memeriksa apakah titik uji terletak di dalam polygon
                                 List<List<LatLng>> innerBoundaries = polygon.getInnerBoundaryCoordinates();
                                 if (innerBoundaries != null){
+                                    //jika titik uji terletak di lubang, maka polygon tidak memuat lokasi
                                     for (List<LatLng> innerBoundary : innerBoundaries){
                                         if (containsLocation(latLngTest, innerBoundary)){
                                             contains = false;
                                         }
-                                      //  if (PolyUtil.containsLocation(latLngTest, innerBoundary, true)){
-                                      //      contains = false;
-                                      //  }
                                     }
-                                }
+                               }
                             }
                         }
                     }
@@ -413,65 +389,17 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         if ((aY>pY && bY>pY) || (aY<pY && bY<pY) || (aX<pX && bX<pX)){
             return false;
         }
-
         double m = (aY - bY) / (aX - bX);
         double bee = (-aX)*m + aY;
         double x = (pY - bee) / m;
 
         return  x > pX;
     }
-
-
-//    private void addMarker(LatLng latLng){                                          //2
-//        MarkerOptions markerOptions = new MarkerOptions().position(latLng);
-//        gMap.addMarker(markerOptions);
-//    }
-
-//    private void addCircle(LatLng latLng, float radius){                            //3
-//        CircleOptions circleOptions = new CircleOptions();
-//        circleOptions.center(latLng);
-//        circleOptions.radius(radius);
-//        circleOptions.strokeColor(Color.argb(255, 255, 0, 0));
-//        circleOptions.fillColor(Color.argb(64, 255, 0, 0));
-//        circleOptions.strokeWidth(4);
-//        gMap.addCircle(circleOptions);
-//    }
-
-//    public static double haversine(double lat1, double lng1, double lat2, double lng2 ){
-//        double dLat = Math.toRadians(lat2 - lat1);
-//        double dLng = Math.toRadians(lng2 - lng1);
-
-//        lat1 = Math.toRadians(lat1);
-//        lat2 = Math.toRadians(lat2);
-
-//        double a = Math.pow(Math.sin(dLat/2), 2) + Math.pow(Math.sin(dLng/2), 2) * Math.cos(lat1) * Math.cos(lat2);
-//        double rad = 6371;
-//        double c = 2 * Math.asin(Math.sqrt(a));
-//        return rad * c;
-//    }
-
-//    public LatLng nearest_point(LatLng test, List<LatLng> target){
-//        double minDistance = distance;
-//        LatLng minDistancePoint = test;
-
-//        for (int i = 0; i < target.size(); i++){
-//            LatLng point = target.get(i);
-//            double distance = haversine(test.latitude, test.longitude, point.latitude, point.longitude);
-
-//            if (distance < minDistance){
-//                minDistance = distance;
-//                minDistancePoint = point;
-//            }
-//        }
-//        return minDistancePoint;
-//    }
-
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
     }
-
     @Override
     public void onBackPressed() {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
@@ -480,8 +408,6 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             super.onBackPressed();
         }
     }
-
-
     private LatLng findPoint(LatLng test, List<LatLng> target){
         double distance = -1;
         LatLng minDistancePoint = test;
@@ -492,7 +418,6 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
         for (int i = 0; i < target.size(); i++){
             LatLng point = target.get(i);
-
             int segmentPoint = i + 1;
             if (segmentPoint >= target.size()){
                 segmentPoint = 0;
@@ -534,7 +459,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                 start.longitude + (u * (end.longitude - start.longitude)));
     }
 
-
+    //mengurai atau mendekode string titik - titik koordinat menjadi barisan lat lng
     private List<com.google.android.gms.maps.model.LatLng> decode(String points) {
         int len = points.length();
 

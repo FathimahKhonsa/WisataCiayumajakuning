@@ -41,6 +41,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
+        //memunculkan data user
         showUserData();
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,45 +52,37 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateProfile(FirebaseUser currentUser) {
+        //mengecek data user apakah sudah terisi
         boolean isEmpty = isEmptyData();
         if (isEmpty){
+            //memanggil class User
             User user = new User(username, currentUser.getEmail(), phone);
+            //mendapatkan referensi database user
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
+            //mendapatkan id user
             String uId = currentUser.getUid();
             binding.progressBar.setVisibility(View.VISIBLE);
+            //mengubah username user
             reference.child(uId).child("username").setValue(username);
+            //mengubah nomor hp user
             reference.child(uId).child("phone").setValue(phone);
-  //          reference.child(uId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-  //              @Override
-  //              public void onComplete(@NonNull Task<Void> task) {
-  //                  if (task.isSuccessful()) {
-  //                      UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().build();
-  //                      currentUser.updateProfile(profileUpdate);
-  //                      Toast.makeText(EditProfileActivity.this, "Anda berhasil mengedit profil Anda", Toast.LENGTH_SHORT).show();
 
-  //                  } else {
-  //                      try {
-  //                          throw task.getException();
-  //                      }catch (Exception e){
-  //                          Toast.makeText(EditProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-  //                      }
-  //                  }
                     binding.progressBar.setVisibility(View.GONE);
 
+                    //pindah ke halaman profile
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
- //                   finish();
- //               }
- //           });
         }
     }
 
     private boolean isEmptyData(){
+        //mengambil teks username dan nomor hp dari editText
         username = binding.inputUsername.getText().toString().trim();
         phone = binding.inputPhoneNumber.getText().toString().trim();
 
+        //pengecekan apakah bagian editText sudah terisi dengan data user
         if ("".equals(username) && "".equals(phone)){
             Toast.makeText(this, "Anda belum mengisi data Anda", Toast.LENGTH_SHORT).show();
             return false;
@@ -107,8 +100,11 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void showUserData(){
+        //mendapatkan id user
         String uId = currentUser.getUid();
+        //mendapatkan referensi database user
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        //mengambil data dari database
         reference.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -117,6 +113,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     username = user.getUsername();
                     phone = user.getPhone();
 
+                    //menampilkan data username dan nomor hp
                     binding.inputUsername.setText(username);
                     binding.inputPhoneNumber.setText(phone);
                 }

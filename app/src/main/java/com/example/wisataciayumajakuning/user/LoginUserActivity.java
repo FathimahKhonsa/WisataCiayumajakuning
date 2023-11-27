@@ -44,12 +44,18 @@ public class LoginUserActivity extends AppCompatActivity {
             loginUser();
         });
 
+        binding.lupaPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginUserActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
     private boolean isValidData(){
+        //mengambil teks email dan password
         email = binding.inputEmail.getText().toString().trim();
         password = binding.inputPassword.getText().toString().trim();
-        
+
+        //mengecek email dan password user apakah sudah diisi dan sesuai
         if (TextUtils.isEmpty(email)){
             binding.emailLayout.setError("Masukkan Email Anda");
             binding.emailLayout.requestFocus();
@@ -68,14 +74,17 @@ public class LoginUserActivity extends AppCompatActivity {
     }
 
     private void loginUser(){
+        //mengecek email dan password user
         boolean isValid = isValidData();
         if (isValid){
             binding.progressBar.setVisibility(View.VISIBLE);
+            //masuk ke aplikasi dengan menggunakan email dan password
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         Toast.makeText(LoginUserActivity.this, "Anda berhasil login", Toast.LENGTH_LONG).show();
+                        //user diarahkan ke halaman utama aplikasi
                         reload();
                     } else {
                        try {
@@ -96,18 +105,6 @@ public class LoginUserActivity extends AppCompatActivity {
             });
         }
     }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser != null){
-//            reload();
-//        } else {
-//            FirebaseAuth.getInstance().signOut();
-//            Toast.makeText(this, "Sesi Anda telah habis", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void reload(){
         Intent intent = new Intent(LoginUserActivity.this, MainActivity.class);

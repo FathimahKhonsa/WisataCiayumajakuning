@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="PERANCANGAN APLIKASI PARIWISATA DI DAERAH CIAYUMAJAKUNING UNTUK INFORMASI OBJEK WISATA DAN PENCARIAN RUTE OBJEK WISATA BERBASIS ANDROID"
+        android:text="PERANCANGAN APLIKASI PARIWISATA DI DAERAH CIAYUMAJAKUNING UNTUK INFORMASI DAN RUTE OBJEK WISATA BERBASIS ANDROID"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="12sp"

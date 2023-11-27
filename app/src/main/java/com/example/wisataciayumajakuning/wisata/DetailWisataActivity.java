@@ -13,8 +13,7 @@ import com.example.wisataciayumajakuning.databinding.ActivityDetailWisataBinding
 
 public class DetailWisataActivity extends AppCompatActivity {
     private ActivityDetailWisataBinding binding;
-//    public static final String EXTRA_LAT = "extra lat";
-//    public static final String EXTRA_LNG = "extra lng";
+
     String wisataImg, lat, lng, name;
 
     @Override

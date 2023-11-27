@@ -2,11 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0802A3</color>
 
     <color name="Primary">#27374D</color>
     <color name="PrimaryDark">#09203f</color>
     <color name="PrimaryLight">#537895</color>
-
 
     <color name="Secondary">#9DB2BF</color>
     <color name="SecondaryDark">#476072</color>
@@ -24,5 +24,4 @@
 
     <color name="darkPurple">#7743DB</color>
     <color name="softPurple">#B15EFF</color>
-
 </resources>

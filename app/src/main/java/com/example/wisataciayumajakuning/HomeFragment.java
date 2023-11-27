@@ -59,8 +59,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
+import com.google.maps.android.data.kml.KmlLayer;
 
 import org.json.JSONException;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,33 +89,39 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
     private AppPermission permission;
     private boolean isPermissionLocationOk;
     private DatabaseReference markersReference;
+    private KmlLayer layer;
 
 
     public HomeFragment(){
 
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        //menginialisasi firebase authentication
         mAuth = FirebaseAuth.getInstance();
+        //mendapatkan current user
         currentUser = mAuth.getCurrentUser();
+        //mendapatkan referensi database markers
         markersReference = FirebaseDatabase.getInstance().getReference("Markers");
 
+        //membuat objek kelas permission ke AppPermission
         permission = new AppPermission();
 
+        //mengecek apakah user sudah melalui proses login
         if (currentUser != null){
             userProfile();
-
+            //mendapatkan url foto profil user
             Uri uri = currentUser.getPhotoUrl();
+            //menampilkan foto profile user di halaman utama (home)
             Glide.with(this).load(uri).centerCrop().into(binding.profileImg);
         }else {
             Toast.makeText(getActivity(), "Terjadi kesalahan, tidak dapat memuat data profile", Toast.LENGTH_SHORT).show();
         }
 
+        //menginisialisasi firebase firestore
         db = FirebaseFirestore.getInstance();
 
         binding.categoryAlam.setOnClickListener(this);
@@ -122,15 +130,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
         binding.categoryOlehOleh.setOnClickListener(this);
         binding.categorySejarah.setOnClickListener(this);
 
+        //mengelola siklus proses peta dan merupakan elemen induk dari UI aplikasi
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapsFragment);
         mapFragment.getMapAsync(this);
 
         rvWisata = binding.rvWisata;
+        //memanggil method getDataWisata( ) untuk menampilkan data wisata
         getDataWisata();
+        //supaya recycler view dapat melakukan optimasi ukuran lebar dan tinggi secara otomatis
         rvWisata.setHasFixedSize(true);
 
         LinearLayoutManager linear = new LinearLayoutManager(getContext());
         linear.setOrientation(LinearLayoutManager.HORIZONTAL);
+        //menampilkan recyclerview dengan view linear secara horizontal untuk memposisikan item
         rvWisata.setLayoutManager(linear);
         return root;
     }
@@ -138,7 +150,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
-
+        //mengecek apakah user sudah memberikan izin untuk akses lokasi
         if (permission.isLocationOK(requireContext())){
             isPermissionLocationOk = true;
             setUpGoogleMap();
@@ -156,40 +168,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
             requestLocation();
         }
         retrieveFromResource();
-//        showArea();
+        //memanggil method showMarker( ) untuk menampilkan penanda - penanda berwarna merah
+        //yang melambangkan posisi lokasi objek wisata
         showMarker();
     }
 
-//    private void showArea(){
-//        db.collection("area").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()){
-//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-//                        Area area = documentSnapshot.toObject(Area.class);
-//                        LatLng latLng = new LatLng(area.getLat(), area.getLng());
-//                        areas.add(latLng);
-//                    }
-//                    Polygon polygon = gMap.addPolygon(new PolygonOptions()
-//                            .addAll(areas));
-//                    polygon.setFillColor(Color.TRANSPARENT);
-//                    polygon.setStrokeColor(Color.BLUE);
-//                } else {
-//                    Toast.makeText(getContext(), "Cannot display polygon", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
-
     private void retrieveFromResource(){
         try {
-            GeoJsonLayer layer = new GeoJsonLayer(gMap, R.raw.area_boundaries, getContext());
-            GeoJsonPolygonStyle polygonStyle = layer.getDefaultPolygonStyle();
-            polygonStyle.setStrokeColor(Color.BLUE);
-            polygonStyle.setStrokeWidth(4);
+            layer = new KmlLayer(gMap, R.raw.ciayumajakuning_area, getContext());
+            //menampilkan batas wilayah Ciayumajakuning pada peta
             layer.addLayerToMap();
-
-        } catch (JSONException e) {
+        } catch (XmlPullParserException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -197,15 +186,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
     }
 
     private void userProfile() {
+        //mengambil user id
         String uId = currentUser.getUid();
 
         binding.progressBar.setVisibility(View.VISIBLE);
+        //mengambil referensi database user
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //mengambil data user berdasarkan id
                 User user = snapshot.getValue(User.class);
                 if (user != null){
+                    //mendapatkan username user
                     username = user.getUsername();
                     binding.usernameTv.setText("Welcome " + username);
                 }
@@ -221,16 +214,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
 
     private void getDataWisata(){
         binding.progressBar.setVisibility(View.VISIBLE);
+        //mengambil semua koleksi data wisata di firestore
         db.collection("wisata").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                        //mengambil semua dokumen data wisata
                         Wisata wisata = documentSnapshot.toObject(Wisata.class);
+                        //menambahkan data wisata yang telah diperoleh ke dalam list
                         wisataList.add(wisata);
                     }
+                    //menghubungkan objek kelas adapter ke adapter
                     adapter = new WisataAdapter(getContext(), wisataList);
+                    //memberitahu bahwa dataset telah berubah
                     adapter.notifyDataSetChanged();
+                    //menghubungkan kelas adapter ke recyclerview
                     rvWisata.setAdapter(adapter);
                 } else {
                     Log.w("HomeFragment", "loadPost:OnCancelled", task.getException());
@@ -243,25 +242,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
 
     @Override
     public void onClick(View v) {
+        //mengambil id view berdasarkan katagori
         int id = v.getId();
         if (id == R.id.categoryAlam){
+            //memindahkan user ke halaman katagori wisata
             Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            //mengirimkan type data wisata berdasarkan key (alam)
             intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "alam");
             startActivity(intent);
         } else if (id == R.id.categoryLainnya) {
             Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
-            intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "kuliner");
+            //mengirimkan type data wisata berdasarkan key (lainnya)
+            intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "lainnya");
             startActivity(intent);
         } else if (id == R.id.categoryPantai) {
             Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            //mengirimkan type data wisata berdasarkan key (pantai)
             intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "pantai");
             startActivity(intent);
         } else if (id == R.id.categorySejarah) {
             Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            //mengirimkan type data wisata berdasarkan key (sejarah)
             intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "sejarah");
             startActivity(intent);
         } else if (id == R.id.categoryOlehOleh) {
             Intent intent = new Intent(getActivity(), CategoryWisataActivity.class);
+            //mengirimkan type data wisata berdasarkan key (oleh - oleh)
             intent.putExtra(CategoryWisataActivity.EXTRA_TYPE, "oleh-oleh");
             startActivity(intent);
         }
@@ -275,6 +281,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //mengecek apakah user mengizinkan aplikasi mengakses lokasi user
         if (requestCode == AllConstant.LOCATION_REQUEST_CODE){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 isPermissionLocationOk = true;
@@ -294,7 +301,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
         }
         gMap.setMyLocationEnabled(true);
         gMap.getUiSettings().setTiltGesturesEnabled(true);
-
+        //memanggil method setUpLocationUpdate( ) untuk mengatur pembaruan lokasi user
         setUpLocationUpdate();
     }
 
@@ -335,13 +342,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
                         }
                     }
                 });
+        //memanggil method getCurrentLocation( ) untuk mengambil lokasi user
         getCurrentLocation();
-
     }
 
     private void getCurrentLocation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
         && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             isPermissionLocationOk = false;
@@ -350,100 +356,37 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
+                //mendapatkan lokasi user
                 currentLocation = location;
-//                if (cointainsLocation(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), areas, true)){
-//                    Toast.makeText(getContext(), "User Location inside Area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(getContext(), "User Location outside Area of Ciayumajakuning", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
     }
 
-
-//    private void showArea(){
-//        db.collection("area").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()){
-//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-//                        Area area = documentSnapshot.toObject(Area.class);
-//                        LatLng latLng = new LatLng(area.getLat(), area.getLng());
-//                        areas.add(latLng);
-//                    }
-//                    Polygon polygon = gMap.addPolygon(new PolygonOptions()
-//                            .addAll(areas));
-//                    polygon.setFillColor(Color.TRANSPARENT);
-//                    polygon.setStrokeColor(Color.BLUE);
-//                } else {
-//                    Toast.makeText(getContext(), "Cannot display polygon", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
-//        areas.add(new LatLng(-6.24864, 107.92192));
-//        areas.add(new LatLng(-6.22543, 108.19932));
-//        areas.add(new LatLng(-6.24727, 108.34626));
-//        areas.add(new LatLng(-6.48066, 108.53441));
-//        areas.add(new LatLng(-6.51675, 108.53962));
-//        areas.add(new LatLng(-6.76302, 108.67391));
-//        areas.add(new LatLng(-6.73078, 108.83920));
-//        areas.add(new LatLng(-6.83216, 108.82284));
-//        areas.add(new LatLng(-7.11180, 108.76882));
-//        areas.add(new LatLng(-7.19492, 108.56145));
-//        areas.add(new LatLng(-7.07154, 108.38696));
-//        areas.add(new LatLng(-7.06745, 108.15487));
-//        areas.add(new LatLng(-7.03883, 108.13702));
-//        areas.add(new LatLng(-6.92706, 108.21942));
-//        areas.add(new LatLng(-6.82208, 108.15762));
-//        areas.add(new LatLng(-6.75116, 108.14938));
-//        areas.add(new LatLng(-6.66153, 108.02676));
-//        areas.add(new LatLng(-6.57149, 107.85098));
-
-//        Polygon polygon = gMap.addPolygon(new PolygonOptions()
-//                .addAll(areas));
-//        polygon.setStrokeColor(Color.BLUE);
-
-//        Polygon polygon = gMap.addPolygon(new PolygonOptions()
-//                .add(new LatLng(-6.24864, 107.92192),
-//                        new LatLng(-6.22543, 108.19932),
-//                        new LatLng(-6.24727, 108.34626),
-//                        new LatLng(-6.48066, 108.53441),
-//                        new LatLng(-6.51675, 108.53962),
-//                        new LatLng(-6.76302, 108.67391),
-//                        new LatLng(-6.73078, 108.83920),
-//                        new LatLng(-6.83216, 108.82284),
-//                        new LatLng(-7.11180, 108.76882),
-//                        new LatLng(-7.19492, 108.56145),
-//                        new LatLng(-7.07154, 108.38696),
-//                        new LatLng(-7.06745, 108.15487),
-//                        new LatLng(-7.03883, 108.13702),
-//                        new LatLng(-6.92706, 108.21942),
-//                        new LatLng(-6.82208, 108.15762),
-//                        new LatLng(-6.75116, 108.14938),
-//                        new LatLng(-6.66153, 108.02676),
-//                        new LatLng(-6.57149, 107.85098)));
-//        polygon.setFillColor(Color.BLUE);
-//    }
-
     private void showMarker(){
+        //mendapatkan referensi database markers di firebase real time database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Markers");
+        //membaca data dan memproses perubahan
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    //mendapatkan objek marker dan menggunakan nilainya untuk update UI
                     Marker mark = dataSnapshot.getValue(Marker.class);
+                    //mendapatkan latitude dan longtitude dari data yang telah disimpan pada objek
                     LatLng latLng = new LatLng(mark.getLat(), mark.getLng());
                     markerOptions = new MarkerOptions();
                     markerOptions.position(latLng).title(mark.getName())
                             .snippet(mark.getCity())
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    //menambahkan penanda lokasi objek wisata pada peta
                     gMap.addMarker(markerOptions);
+                    //mengatur jendela info
                     gMap.setInfoWindowAdapter(new InfoWindowAdapter(getContext()));
 
                     gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(@NonNull com.google.android.gms.maps.model.Marker marker) {
+                            //menampilkan info window ketika penanda lokasi wisata di klik
                             marker.showInfoWindow();
                             return true;
                         }
@@ -455,66 +398,5 @@ public class HomeFragment extends Fragment implements View.OnClickListener, OnMa
 
             }
         });
-    }
-
-//    public double coordinates(){
-//        Geometry geometry = new Geometry();
-//        Gson gson = new Gson();
-//        try {
-//            FileReader reader = new FileReader("area_boundaries.json");
-//            geometry = gson.fromJson(reader, Geometry.class);
-
-//            JSONArray coordinatesArray = geometry.getCoordinates();
-//            if (coordinatesArray.length() == 0){
-//                Toast.makeText(getContext(), "No coordinates found", Toast.LENGTH_SHORT).show();
-//            }
-
-//            JSONArray polygonArray = coordinatesArray.getJSONArray(0);
-//            JSONArray exteriorArray = polygonArray.getJSONArray(0);
-
-//            Double result = new Double;
-//            for (int i = 0; i< exteriorArray.length(); i++){
-//                JSONArray point = coordinatesArray.getJSONArray(i);
-//                result[i][0] = point.getDouble(0);
-//                result[i][1] = point.getDouble(1);
-//            }
-//            return result;
-
-//            LatLng latLng = new LatLng()
-
-//        } catch (FileNotFoundException e){
-//            throw new RuntimeException(e);
-//        } catch (JSONException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-    public static boolean cointainsLocation(LatLng point, List<LatLng> polygon, boolean geodesic){
-        int intersectCount = 0;
-        for (int j = 0; j < polygon.size() - 1; j++){
-            if (rayCastIntersect(point, polygon.get(j), polygon.get(j + 1))){
-                intersectCount++;
-            }
-        }
-        return ((intersectCount % 2) == 1); //odd is inside, even is outside
-    }
-
-    private static boolean rayCastIntersect(LatLng point, LatLng vertA, LatLng vertB){
-        double aY = vertA.latitude;
-        double bY = vertB.latitude;
-        double aX = vertA.longitude;
-        double bX = vertB.longitude;
-        double pY = point.latitude;
-        double pX = point.longitude;
-
-        if ((aY>pY && bY>pY) || (aY<pY && bY<pY) || (aX<pX && bX<pX)){
-            return false;
-        }
-
-        double m = (aY - bY) / (aX - bX);
-        double bee = (-aX)*m + aY;
-        double x = (pY - bee) / m;
-
-        return  x > pX;
     }
 }

@@ -38,7 +38,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        //mendapatkan referensi database user
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
 
         binding.btnRegister.setOnClickListener(v -> {
@@ -79,10 +79,13 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private void registerUser(){
+        //mengisialisasi firebase authentication
         mAuth = FirebaseAuth.getInstance();
+        //mengecek data user yang telah diinputkan di edit text
         boolean isValid = isValidData();
         if (isValid){
             binding.progressBar.setVisibility(View.VISIBLE);
+            //membuat akun user dengan menggunakan email dan password
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -92,13 +95,14 @@ public class RegisterUserActivity extends AppCompatActivity {
                         User user = new User(username, email, phone);
 
                         currentUser = mAuth.getCurrentUser();
-
+                        //menyimpan data user ke database user di firebase real time database
                         mDatabase.child(currentUser.getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){
+                                    //mengirimkan email untuk verifikasi
                                     currentUser.sendEmailVerification();
-
+                                    //pindah ke halaman utama aplikasi
                                     Intent intent = new Intent(RegisterUserActivity.this, MainActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
                                             | Intent.FLAG_ACTIVITY_NEW_TASK);

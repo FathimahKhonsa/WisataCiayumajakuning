@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.wisataciayumajakuning.MainActivity;
 import com.example.wisataciayumajakuning.ProfileFragment;
 import com.example.wisataciayumajakuning.R;
 import com.example.wisataciayumajakuning.databinding.ActivityUbahPasswordBinding;
@@ -33,13 +34,16 @@ public class UbahPasswordActivity extends AppCompatActivity {
         binding = ActivityUbahPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //menginisialisasi firebase authentication
         mAuth = FirebaseAuth.getInstance();
+        //mendapatkan current user
         currentUser = mAuth.getCurrentUser();
 
         binding.inputNewPassword.setEnabled(false);
         binding.inputKonfirmasiPassword.setEnabled(false);
         binding.btnChangePass.setEnabled(false);
 
+        //mengecek apakah user sudah masuk ke dalam aplikasi
         if (currentUser.equals("")){
             Toast.makeText(this, "Terjadi kesalahan ketika masuk", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, LoginUserActivity.class);
@@ -59,8 +63,9 @@ public class UbahPasswordActivity extends AppCompatActivity {
                     binding.layoutPassWord.requestFocus();
                 } else {
                     binding.progressBar.setVisibility(View.VISIBLE);
-
+                    //mendapatkan auth credential dari user yang digunakan untuk proses autentikasi ulang
                     AuthCredential credential = EmailAuthProvider.getCredential(currentUser.getEmail(), oldPassword);
+                    //memint user untuk memberikan kembali credential masuknya
                     currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -95,9 +100,10 @@ public class UbahPasswordActivity extends AppCompatActivity {
     }
 
     private void changePassword(FirebaseUser currentUser) {
+        //mengambil teks password baru dan konfirmasi password
         String newPassword = binding.inputNewPassword.getText().toString();
         String confirmaPassword = binding.inputKonfirmasiPassword.getText().toString();
-
+        //mengecek password baru user
         if (TextUtils.isEmpty(newPassword)){
             binding.layoutNewPass.setError("Isikan Password baru Anda");
             binding.layoutNewPass.requestFocus();
@@ -113,11 +119,13 @@ public class UbahPasswordActivity extends AppCompatActivity {
         } else {
             binding.progressBar.setVisibility(View.VISIBLE);
 
+            //mengubah kata sandi user
             currentUser.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
                         Toast.makeText(UbahPasswordActivity.this, "Password Anda berhasil diubah", Toast.LENGTH_SHORT).show();
+                        reload();
 //                        finish();
                     } else {
                         try {
@@ -127,11 +135,16 @@ public class UbahPasswordActivity extends AppCompatActivity {
                         }
                     }
                     binding.progressBar.setVisibility(View.GONE);
-                    Fragment fragment = new ProfileFragment();
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
+//                    Fragment fragment = new ProfileFragment();
+//                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//                    fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
                 }
             });
         }
+    }
+
+    private void reload(){
+        Intent intent = new Intent(UbahPasswordActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }

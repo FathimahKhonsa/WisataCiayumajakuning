@@ -42,24 +42,38 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
 
+    //Live Data
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    //View Model
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    //Fragment Navigation
     implementation "androidx.navigation:navigation-fragment:2.6.0"
     implementation "androidx.navigation:navigation-ui:2.6.0"
 
+    //dependency firebase authentication
     implementation 'com.google.firebase:firebase-auth:22.1.2'
+    //dependency firebase real time database
     implementation 'com.google.firebase:firebase-database:20.2.2'
+    //dependency firebase firestore
     implementation 'com.google.firebase:firebase-firestore:24.8.1'
+    //dependency firebase storage
     implementation 'com.google.firebase:firebase-storage:20.2.1'
 
+    //depndency untuk memuat gambar
     implementation 'com.github.bumptech.glide:glide:4.15.1'
+    //dependency untuk memilih atau mengambil gambar
     implementation 'com.github.dhaval2404:imagepicker:2.1'
+    //dependency untuk memuat gambar berbentuk bulat
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //layanan google maps sdk untuk android
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    //layanan penyedia lokasi untuk android
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+    //Perpustakaan utilitas untuk Maps SDK untuk android
     implementation 'com.google.maps.android:android-maps-utils:3.4.0'
 
+    //dependency untuk menggunaka library retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'

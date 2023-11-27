@@ -21,9 +21,11 @@ public class CoverActivity extends AppCompatActivity {
         binding = ActivityCoverBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //menginialisasi firebase authentication
         mAuth = FirebaseAuth.getInstance();
 
         binding.btnMulai.setOnClickListener(v -> {
+            //mengantarkan user ke halaman login
             Intent intent = new Intent(CoverActivity.this, LoginUserActivity.class);
             startActivity(intent);
         });
@@ -32,12 +34,13 @@ public class CoverActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //mendapatkan current user
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        //mengecek user sudah login atau belum, jika sudah maka user langsung berada di halaman utama
         if (currentUser != null){
             reload();
         } else {
             FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Sesi Anda telah habis", Toast.LENGTH_SHORT).show();
         }
     }
 

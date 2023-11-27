@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.wisataciayumajakuning.HomeFragment;
+import com.example.wisataciayumajakuning.MainActivity;
 import com.example.wisataciayumajakuning.ProfileFragment;
 import com.example.wisataciayumajakuning.R;
 import com.example.wisataciayumajakuning.databinding.ActivityUbahEmailBinding;
@@ -37,15 +38,19 @@ public class UbahEmailActivity extends AppCompatActivity {
         binding = ActivityUbahEmailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //mengisinisialisasi firebase authentication
         mAuth = FirebaseAuth.getInstance();
+        //mendapatkan currentUser
         currentUser = mAuth.getCurrentUser();
 
         binding.btnUpdateEmail.setEnabled(false);
         binding.inputEmailBaru.setEnabled(false);
 
+        //mendapatkan email user sebelum diubah
         userOldEmail = currentUser.getEmail();
         binding.inputEmail.setText(userOldEmail);
 
+        //mengecek akun user sudah masuk ke dalam aplikasi atau belum
         if (currentUser.equals("")){
             Toast.makeText(this, "Terjadi kesalahan ketika login", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, LoginUserActivity.class);
@@ -67,7 +72,9 @@ public class UbahEmailActivity extends AppCompatActivity {
                     binding.passwordLayout.requestFocus();
                 } else {
                     binding.progressBar.setVisibility(View.VISIBLE);
+                    //mendapatkan auth credential dari user yang digunakan untuk autentikasi ulang
                     AuthCredential authCredential = EmailAuthProvider.getCredential(userOldEmail, userPassword);
+                    //meminta user untuk memberikan kembali credential masuknya
                     currentUser.reauthenticate(authCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -83,6 +90,7 @@ public class UbahEmailActivity extends AppCompatActivity {
                                 binding.btnUpdateEmail.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        //mengecek email baru user yang telah diinput di edit text
                                         userNewEmail = binding.inputEmailBaru.getText().toString();
                                         if (TextUtils.isEmpty(userNewEmail)){
                                             binding.newEmailLayout.setError("Isikan Email baru Anda");
@@ -95,9 +103,12 @@ public class UbahEmailActivity extends AppCompatActivity {
                                             binding.newEmailLayout.requestFocus();
                                         } else {
                                             binding.progressBar.setVisibility(View.GONE);
+                                            //memanggil method updateEmail( ) untuk meng- update email user
                                             updateEmail(currentUser);
+                                            //mengambil referensi database user
                                             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
                                             String uId = currentUser.getUid();
+                                            //menyimpan email baru user di database
                                             reference.child(uId).child("email").setValue(userNewEmail);
                                         }
                                     }
@@ -118,6 +129,7 @@ public class UbahEmailActivity extends AppCompatActivity {
     }
 
     private void updateEmail(FirebaseUser currentUser) {
+        //meng-update email user
         currentUser.updateEmail(userNewEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -132,8 +144,10 @@ public class UbahEmailActivity extends AppCompatActivity {
     }
 
     private void reload(){
-        Fragment fragment = new ProfileFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
+        Intent intent = new Intent(UbahEmailActivity.this, MainActivity.class);
+        startActivity(intent);
+//        Fragment fragment = new ProfileFragment();
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(R.id.nav_host_fragment_container, fragment).commit();
     }
 }
